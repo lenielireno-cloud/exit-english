@@ -52,7 +52,7 @@ textarea:focus,input:focus{outline:none;border-color:var(--sign)}
 .btn:disabled{opacity:.5;cursor:default}
 .row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
 .msg{font-size:14px;color:var(--muted)}
-.lesson-head{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.lesson-head{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);padding-block:8px;border-bottom:1px solid var(--line);display:flex;gap:10px;align-items:center;flex-wrap:wrap}
 .lesson-head h2{font:800 24px/1.15 var(--display);margin:0;flex:1;min-width:0;text-wrap:balance}
 .prog{height:6px;background:var(--line);border-radius:3px;overflow:hidden}
 .prog i{display:block;height:100%;background:var(--sign);width:0;transition:width .25s}
@@ -65,6 +65,7 @@ textarea:focus,input:focus{outline:none;border-color:var(--sign)}
 .pt .h{color:transparent;background:var(--line);border-radius:3px}
 .cur{background:color-mix(in srgb,var(--sign) 7%,transparent);border-radius:8px;padding:10px;border-bottom:none}
 .hint{font-size:13px;color:var(--muted)}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--bg)}
 .say{background:none;border:1px solid var(--line);color:var(--ink);border-radius:6px;padding:2px 8px;font-size:14px;cursor:pointer;margin-left:6px;vertical-align:middle}
 .lvl{font:700 11px var(--mono);text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
 @media (prefers-reduced-motion:reduce){.prog i{transition:none}}
@@ -912,7 +913,9 @@ function lesson(id){
     <span class="hint">Maiúsculas não contam. Verde = certo, vermelho = errado.</span></div>
   </section>`;
   const box=document.getElementById("sents"),typ=document.getElementById("typ");
-  document.getElementById("back").onclick=home;
+  if(history.state&&history.state.l)history.replaceState({l:id},"");else history.pushState({l:id},"");
+  const goHome=()=>{if(history.state&&history.state.l)history.back();else home()};
+  document.getElementById("back").onclick=goHome;
   document.getElementById("skip").onclick=()=>next();
   const lis=document.getElementById("listen"),la=document.getElementById("listenAll"),spd=document.getElementById("spd");
   let playingAll=false;
@@ -942,13 +945,15 @@ function lesson(id){
     }).join("")||`<div class="sent"><div class="en donee">Lição concluída! 🎉</div><div class="row"><button class="btn" id="again">Refazer</button><button class="btn ghost" id="home2">Outras lições</button></div></div>`;
     document.getElementById("pg").style.width=(cur/x.s.length*100)+"%";
     lis.hidden=!x.s[cur];
-    const a=document.getElementById("again");if(a){a.onclick=()=>lesson(id);document.getElementById("home2").onclick=home}
+    const a=document.getElementById("again");if(a){a.onclick=()=>lesson(id);document.getElementById("home2").onclick=goHome}
   }
   function next(){cur++;typ.value="";if(cur>=x.s.length){done[id]=true;pos[id]=0;typ.disabled=true}else pos[id]=cur;persist();render();if(cur<x.s.length)typ.focus()}
   typ.oninput=()=>{if(cur<x.s.length&&norm(typ.value).trim().toLowerCase()===norm(x.s[cur][0]).toLowerCase())next();else render()};
   typ.onkeydown=e=>{if(e.key==="Enter")e.preventDefault()};
   render();typ.focus();window.scrollTo(0,0);
 }
+if(history.state&&history.state.l)history.replaceState(null,"");
+window.addEventListener("popstate",()=>home());
 home();
 if("serviceWorker" in navigator)navigator.serviceWorker.register("sw.js").catch(()=>{});
 </script>
