@@ -1,0 +1,956 @@
+<!doctype html>
+<html lang="pt-BR"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0B6B47">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<title>Exit English</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: lista de "saídas" estilo placa de rodovia americana -> tela de digitação com tradução revelada abaixo */
+:root{
+  --bg:#F3F5F4; --surface:#FFFFFF; --ink:#13201B; --muted:#5E6E67; --line:#D7DFDB;
+  --sign:#0B6B47; --sign-ink:#FFFFFF; --ok:#137A3E; --bad:#C2352B; --pend:#9AA8A2; --pt:#2C4A9A;
+  --display:"Bricolage Grotesque",system-ui,sans-serif;
+  --body:"Atkinson Hyperlegible",system-ui,sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,Menlo,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0F1613; --surface:#17211D; --ink:#E7EEEA; --muted:#93A39C; --line:#2A3832;
+  --sign:#14875C; --sign-ink:#FFFFFF; --ok:#4CC27E; --bad:#FF7A6E; --pend:#5E6E67; --pt:#9DB5FF; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0F1613; --surface:#17211D; --ink:#E7EEEA; --muted:#93A39C; --line:#2A3832;
+  --sign:#14875C; --sign-ink:#FFFFFF; --ok:#4CC27E; --bad:#FF7A6E; --pend:#5E6E67; --pt:#9DB5FF; color-scheme:dark}
+body{background:var(--bg);color:var(--ink);font:16px/1.5 var(--body)}
+.wrap{max-width:760px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:20px 48px;display:grid;gap:18px}
+h1{font:800 clamp(28px,7vw,40px)/1.05 var(--display);margin:0;letter-spacing:-.01em;text-wrap:balance}
+h1 span{color:var(--sign)}
+.sub{color:var(--muted);margin:4px 0 0}
+.bar{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.chip{border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:999px;padding:6px 14px;font:700 14px var(--body);cursor:pointer}
+.chip[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.stat{margin-left:auto;font:600 13px var(--mono);color:var(--muted);font-variant-numeric:tabular-nums}
+.list{display:grid;gap:10px}
+.exit{display:flex;gap:14px;align-items:center;text-align:left;width:100%;background:var(--sign);color:var(--sign-ink);border:2px solid var(--sign);outline:2px solid var(--sign-ink);outline-offset:-6px;border-radius:10px;padding:14px 16px;cursor:pointer;font:inherit}
+.exit:focus-visible{box-shadow:0 0 0 3px var(--ink)}
+.exit .num{font:700 12px/1.1 var(--mono);text-transform:uppercase;letter-spacing:.08em;border:1.5px solid currentColor;border-radius:4px;padding:6px 7px;text-align:center;min-width:58px}
+.exit .num b{display:block;font:800 20px var(--display);letter-spacing:0}
+.exit .t{min-width:0;flex:1}
+.exit .t strong{display:block;font:700 17px/1.25 var(--display)}
+.exit .t small{opacity:.85;font-size:13px}
+.exit .done{font:700 12px var(--mono);background:var(--sign-ink);color:var(--sign);border-radius:4px;padding:3px 6px}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px;display:grid;gap:12px}
+.panel h2{font:700 18px var(--display);margin:0}
+label{font:700 13px var(--body);letter-spacing:.04em;text-transform:uppercase;color:var(--muted)}
+textarea,input{width:100%;box-sizing:border-box;border:1.5px solid var(--line);background:var(--bg);color:var(--ink);border-radius:8px;padding:12px;font:17px/1.5 var(--mono)}
+textarea:focus,input:focus{outline:none;border-color:var(--sign)}
+.btn{background:var(--sign);color:var(--sign-ink);border:none;border-radius:8px;padding:10px 16px;font:700 15px var(--body);cursor:pointer}
+.btn.ghost{background:transparent;color:var(--ink);border:1.5px solid var(--line)}
+.btn:disabled{opacity:.5;cursor:default}
+.row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.msg{font-size:14px;color:var(--muted)}
+.lesson-head{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.lesson-head h2{font:800 24px/1.15 var(--display);margin:0;flex:1;min-width:0;text-wrap:balance}
+.prog{height:6px;background:var(--line);border-radius:3px;overflow:hidden}
+.prog i{display:block;height:100%;background:var(--sign);width:0;transition:width .25s}
+.sent{display:grid;gap:4px;padding:10px 0;border-bottom:1px dashed var(--line)}
+.sent:last-child{border-bottom:none}
+.en{font:17px/1.6 var(--mono);word-break:break-word}
+.en .ok{color:var(--ok)} .en .bad{color:var(--bad);background:color-mix(in srgb,var(--bad) 15%,transparent);border-radius:2px} .en .p{color:var(--pend)}
+.en.donee{color:var(--ink)}
+.pt{color:var(--pt);font-size:16px;min-height:1.5em}
+.pt .h{color:transparent;background:var(--line);border-radius:3px}
+.cur{background:color-mix(in srgb,var(--sign) 7%,transparent);border-radius:8px;padding:10px;border-bottom:none}
+.hint{font-size:13px;color:var(--muted)}
+.say{background:none;border:1px solid var(--line);color:var(--ink);border-radius:6px;padding:2px 8px;font-size:14px;cursor:pointer;margin-left:6px;vertical-align:middle}
+.lvl{font:700 11px var(--mono);text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
+@media (prefers-reduced-motion:reduce){.prog i{transition:none}}
+</style>
+
+<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}[hidden]{display:none!important}</style>
+</head><body>
+<div class="wrap" id="app"></div>
+
+<script>
+const L=[
+// ---------- BÁSICO ----------
+["Primeiro dia no trabalho","b",[
+["Hi, my name is Carlos and I am from Brazil.","Oi, meu nome é Carlos e eu sou do Brasil."],
+["Today is my first day here.","Hoje é meu primeiro dia aqui."],
+["Nice to meet you. I'm Jenny, your supervisor.","Prazer em conhecer você. Eu sou a Jenny, sua supervisora."],
+["Where should I put my bag?","Onde eu devo colocar minha bolsa?"],
+["You can use the locker in the break room.","Você pode usar o armário na sala de descanso."]]],
+["Pedindo um café","b",[
+["Good morning! What can I get for you?","Bom dia! O que posso trazer para você?"],
+["Can I have a medium coffee, please?","Pode me dar um café médio, por favor?"],
+["Sure. Would you like milk or sugar?","Claro. Você quer leite ou açúcar?"],
+["Just a little milk, thank you.","Só um pouco de leite, obrigado."],
+["That will be three dollars and fifty cents.","Vai ficar três dólares e cinquenta centavos."]]],
+["No supermercado","b",[
+["Excuse me, where can I find the rice?","Com licença, onde eu encontro o arroz?"],
+["It's in aisle five, next to the beans.","Fica no corredor cinco, ao lado do feijão."],
+["Do you have a store card?","Você tem cartão da loja?"],
+["No, I don't. Can I pay with a debit card?","Não, não tenho. Posso pagar com cartão de débito?"],
+["Yes, just insert it here.","Sim, é só inserir aqui."]]],
+["Pegando o ônibus","b",[
+["Does this bus go to downtown?","Este ônibus vai para o centro?"],
+["Yes, it stops at Main Street.","Sim, ele para na Main Street."],
+["How much is the fare?","Quanto custa a passagem?"],
+["It's two dollars, and you need exact change.","São dois dólares, e você precisa do valor exato."],
+["Please tell me when we get to my stop.","Por favor, me avise quando chegarmos no meu ponto."]]],
+["Pedindo direções","b",[
+["Excuse me, I'm looking for the post office.","Com licença, estou procurando os correios."],
+["Go straight for two blocks.","Siga em frente por dois quarteirões."],
+["Then turn left at the traffic light.","Depois vire à esquerda no semáforo."],
+["It's across the street from the bank.","Fica do outro lado da rua, em frente ao banco."],
+["Is it far from here?","É longe daqui?"],
+["No, it's about a five-minute walk.","Não, são uns cinco minutos a pé."]]],
+["Horário de trabalho","b",[
+["What time does my shift start?","Que horas começa o meu turno?"],
+["You start at seven in the morning.","Você começa às sete da manhã."],
+["Do I need to clock in?","Eu preciso bater o ponto?"],
+["Yes, use the machine by the front door.","Sim, use a máquina perto da porta da frente."],
+["Your shift ends at three thirty.","Seu turno termina às três e meia."]]],
+["No restaurante","b",[
+["A table for two, please.","Uma mesa para dois, por favor."],
+["Here is the menu. Can I get you something to drink?","Aqui está o cardápio. Posso trazer algo para beber?"],
+["I'll have a glass of water.","Vou querer um copo de água."],
+["Are you ready to order?","Vocês estão prontos para pedir?"],
+["Yes, I'd like the chicken sandwich with fries.","Sim, eu gostaria do sanduíche de frango com batatas fritas."],
+["Could we have the check, please?","Pode trazer a conta, por favor?"]]],
+["Alugando um quarto","b",[
+["Hi, I'm calling about the room for rent.","Oi, estou ligando sobre o quarto para alugar."],
+["Is it still available?","Ele ainda está disponível?"],
+["Yes. The rent is six hundred dollars a month.","Sim. O aluguel é seiscentos dólares por mês."],
+["Are utilities included?","As contas de luz e água estão incluídas?"],
+["Water is included, but electricity is not.","A água está incluída, mas a luz não."],
+["Can I see the room tomorrow?","Posso ver o quarto amanhã?"]]],
+["Abrindo conta no banco","b",[
+["I would like to open a checking account.","Eu gostaria de abrir uma conta corrente."],
+["Do you have a photo ID?","Você tem um documento com foto?"],
+["Yes, here is my passport.","Sim, aqui está meu passaporte."],
+["Please fill out this form.","Por favor, preencha este formulário."],
+["Your debit card will arrive by mail in a week.","Seu cartão de débito vai chegar pelo correio em uma semana."]]],
+["Comprando um chip de celular","b",[
+["I need a SIM card for my phone.","Eu preciso de um chip para o meu celular."],
+["Do you want a prepaid plan?","Você quer um plano pré-pago?"],
+["Yes. How much is the monthly plan?","Sim. Quanto custa o plano mensal?"],
+["It's forty dollars with unlimited data.","São quarenta dólares com internet ilimitada."],
+["Can you help me set it up?","Você pode me ajudar a configurar?"]]],
+["Conversa rápida com colega","b",[
+["How was your weekend?","Como foi seu fim de semana?"],
+["It was great. I went to the beach.","Foi ótimo. Eu fui à praia."],
+["The weather is really hot today.","O tempo está muito quente hoje."],
+["Yes, I hope it rains later.","Sim, espero que chova mais tarde."],
+["See you at lunch!","Te vejo no almoço!"]]],
+["Pedindo ajuda ao supervisor","b",[
+["Sorry, I don't understand this task.","Desculpe, eu não entendo esta tarefa."],
+["Can you show me how to do it?","Você pode me mostrar como fazer?"],
+["Sure. First, check the list.","Claro. Primeiro, confira a lista."],
+["Then put the boxes on this shelf.","Depois coloque as caixas nesta prateleira."],
+["Thank you, now I understand.","Obrigado, agora eu entendi."]]],
+["Hora do almoço","b",[
+["When is our lunch break?","Quando é a nossa pausa para o almoço?"],
+["We have thirty minutes at noon.","Temos trinta minutos ao meio-dia."],
+["Is there a microwave I can use?","Tem um micro-ondas que eu possa usar?"],
+["Yes, it's in the kitchen.","Sim, fica na cozinha."],
+["Do you want to eat together?","Você quer comer junto?"]]],
+["Planos de fim de semana","b",[
+["What are you doing this Saturday?","O que você vai fazer neste sábado?"],
+["I'm going to a barbecue at my friend's house.","Eu vou a um churrasco na casa de um amigo."],
+["Do you want to come with me?","Você quer vir comigo?"],
+["I'd love to. What should I bring?","Eu adoraria. O que eu devo levar?"],
+["Just bring some drinks.","Só traga umas bebidas."]]],
+// ---------- INTERMEDIÁRIO ----------
+["Entrevista de emprego","i",[
+["Tell me a little about yourself.","Me fale um pouco sobre você."],
+["I have five years of experience in customer service.","Eu tenho cinco anos de experiência em atendimento ao cliente."],
+["Why do you want to work here?","Por que você quer trabalhar aqui?"],
+["I like your company's values and I want to grow with the team.","Eu gosto dos valores da sua empresa e quero crescer com a equipe."],
+["Are you available to work on weekends?","Você tem disponibilidade para trabalhar nos fins de semana?"],
+["Yes, my schedule is flexible.","Sim, meu horário é flexível."]]],
+["Treinamento de segurança","i",[
+["Everyone must wear safety boots on the floor.","Todos devem usar botas de segurança na área de trabalho."],
+["Gloves and goggles are in the cabinet.","Luvas e óculos de proteção estão no armário."],
+["If you see a spill, report it right away.","Se você vir algo derramado, informe imediatamente."],
+["Never lift heavy boxes alone.","Nunca levante caixas pesadas sozinho."],
+["The emergency exit is at the back of the building.","A saída de emergência fica nos fundos do prédio."]]],
+["Avisando que está doente","i",[
+["Hi, this is Carlos. I'm calling in sick today.","Oi, aqui é o Carlos. Estou ligando para avisar que estou doente hoje."],
+["I have a fever and a bad headache.","Estou com febre e uma dor de cabeça forte."],
+["I'm sorry to hear that. Feel better soon.","Sinto muito. Melhoras."],
+["Do I need a doctor's note?","Eu preciso de um atestado médico?"],
+["Only if you miss more than two days.","Só se você faltar mais de dois dias."]]],
+["Recebendo o pagamento","i",[
+["We get paid every other Friday.","Nós recebemos a cada duas sextas-feiras."],
+["You can choose direct deposit or a paper check.","Você pode escolher depósito direto ou cheque em papel."],
+["I'd prefer direct deposit.","Eu prefiro depósito direto."],
+["Please give me your account and routing numbers.","Por favor, me passe o número da sua conta e o código do banco."],
+["Your pay stub shows taxes and deductions.","O seu holerite mostra os impostos e descontos."]]],
+["Na clínica de urgência","i",[
+["I'd like to see a doctor, please.","Eu gostaria de ver um médico, por favor."],
+["Do you have health insurance?","Você tem plano de saúde?"],
+["No, how much does a visit cost without insurance?","Não, quanto custa uma consulta sem plano?"],
+["A basic visit is about one hundred fifty dollars.","Uma consulta básica custa cerca de cento e cinquenta dólares."],
+["Please have a seat. The nurse will call your name.","Por favor, sente-se. A enfermeira vai chamar seu nome."]]],
+["Na lavanderia","i",[
+["How does this washing machine work?","Como funciona esta máquina de lavar?"],
+["Put in four quarters and choose the cycle.","Coloque quatro moedas de 25 centavos e escolha o ciclo."],
+["Where can I buy detergent?","Onde posso comprar sabão?"],
+["There's a vending machine by the door.","Tem uma máquina de venda perto da porta."],
+["The dryer takes about forty minutes.","A secadora leva uns quarenta minutos."]]],
+["Problema no apartamento","i",[
+["Hi, the sink in my kitchen is leaking.","Oi, a pia da minha cozinha está vazando."],
+["Also, the heater isn't working.","Além disso, o aquecedor não está funcionando."],
+["I'll send someone to fix it tomorrow morning.","Vou mandar alguém consertar amanhã de manhã."],
+["Will you be home around nine?","Você vai estar em casa por volta das nove?"],
+["No, but you can use the spare key.","Não, mas vocês podem usar a chave reserva."]]],
+["Entregando currículo","i",[
+["Hello, are you hiring right now?","Olá, vocês estão contratando agora?"],
+["Yes, we need people for the night shift.","Sim, precisamos de pessoas para o turno da noite."],
+["Here is my resume.","Aqui está meu currículo."],
+["Please apply online, too.","Por favor, se candidate pelo site também."],
+["The manager will call you this week.","O gerente vai te ligar esta semana."]]],
+["Atendendo um cliente","i",[
+["Welcome! How can I help you today?","Bem-vindo! Como posso ajudar você hoje?"],
+["I'm looking for a size medium in this shirt.","Estou procurando esta camisa no tamanho médio."],
+["Let me check in the back for you.","Deixa eu verificar no estoque para você."],
+["Sorry, we only have it in large.","Desculpe, só temos no tamanho grande."],
+["I can order it online for free shipping.","Posso pedir pelo site com frete grátis."]]],
+["Trocando de turno","i",[
+["Can you cover my shift on Thursday?","Você pode cobrir meu turno na quinta?"],
+["I have a doctor's appointment that morning.","Tenho uma consulta médica naquela manhã."],
+["Sure, if you take my Sunday shift.","Claro, se você pegar o meu turno de domingo."],
+["Deal. I'll let the manager know.","Combinado. Vou avisar o gerente."],
+["Thanks, I owe you one.","Valeu, fico te devendo uma."]]],
+["Tirando a carteira de motorista","i",[
+["I need to make an appointment at the DMV.","Preciso marcar um horário no Departamento de Trânsito."],
+["You have to pass a written test first.","Você precisa passar primeiro numa prova escrita."],
+["Bring proof of address and your ID.","Traga um comprovante de endereço e seu documento."],
+["After that, you can schedule the road test.","Depois disso, você pode agendar a prova prática."],
+["Don't forget to get car insurance.","Não esqueça de fazer o seguro do carro."]]],
+["Na farmácia","i",[
+["I'm here to pick up a prescription.","Vim buscar um remédio com receita."],
+["What's your name and date of birth?","Qual é o seu nome e data de nascimento?"],
+["Take one pill twice a day with food.","Tome um comprimido duas vezes ao dia com comida."],
+["Do you have anything for a sore throat?","Você tem algo para dor de garganta?"],
+["Try these lozenges in aisle three.","Experimente estas pastilhas no corredor três."]]],
+["Feedback do gerente","i",[
+["You're doing a great job so far.","Você está fazendo um ótimo trabalho até agora."],
+["Customers say you are very friendly.","Os clientes dizem que você é muito simpático."],
+["But please try to be on time every day.","Mas, por favor, tente chegar no horário todos os dias."],
+["You're right. It won't happen again.","Você tem razão. Não vai acontecer de novo."],
+["Keep up the good work.","Continue com o bom trabalho."]]],
+["Pedindo hora extra","i",[
+["Are there any overtime hours available this week?","Tem alguma hora extra disponível esta semana?"],
+["Yes, we need help on Saturday.","Sim, precisamos de ajuda no sábado."],
+["Overtime pays time and a half.","Hora extra paga uma vez e meia o valor."],
+["Great, put my name on the list.","Ótimo, coloque meu nome na lista."],
+["Remember that the limit is ten extra hours.","Lembre-se que o limite é de dez horas extras."]]],
+// ---------- AVANÇADO ----------
+["Reunião de equipe","a",[
+["Let's go over the agenda for today's meeting.","Vamos revisar a pauta da reunião de hoje."],
+["Sales went up by ten percent last month.","As vendas subiram dez por cento no mês passado."],
+["However, we still have issues with late deliveries.","No entanto, ainda temos problemas com entregas atrasadas."],
+["I suggest we hire two more drivers.","Eu sugiro contratarmos mais dois motoristas."],
+["Let's discuss that and vote next week.","Vamos discutir isso e votar na semana que vem."],
+["Does anyone have questions before we wrap up?","Alguém tem perguntas antes de encerrarmos?"]]],
+["Negociando salário","a",[
+["Thank you for the offer. I'm very excited about this role.","Obrigado pela oferta. Estou muito animado com essa vaga."],
+["Based on my experience, I was expecting a higher rate.","Com base na minha experiência, eu esperava um valor maior."],
+["Is there any flexibility in the hourly pay?","Existe alguma flexibilidade no pagamento por hora?"],
+["We could increase it by one dollar after ninety days.","Poderíamos aumentar um dólar depois de noventa dias."],
+["That sounds fair. Could we put that in writing?","Parece justo. Poderíamos colocar isso por escrito?"]]],
+["Reclamação de cliente","a",[
+["I ordered this two weeks ago and it still hasn't arrived.","Eu pedi isso há duas semanas e ainda não chegou."],
+["I completely understand your frustration.","Eu entendo completamente sua frustração."],
+["Let me look up your order number.","Deixa eu procurar o número do seu pedido."],
+["It looks like it was sent to the wrong address.","Parece que foi enviado para o endereço errado."],
+["I'll ship a replacement today at no extra cost.","Vou enviar outro hoje sem custo adicional."]]],
+["Escrevendo um e-mail formal","a",[
+["Dear Ms. Johnson,","Prezada Sra. Johnson,"],
+["I am writing to follow up on my application for the warehouse position.","Escrevo para dar seguimento à minha candidatura para a vaga no depósito."],
+["I am still very interested in joining your team.","Continuo muito interessado em fazer parte da sua equipe."],
+["Please let me know if you need any additional information.","Por favor, me avise se precisar de alguma informação adicional."],
+["I look forward to hearing from you.","Aguardo seu retorno."],
+["Best regards, Carlos Silva","Atenciosamente, Carlos Silva"]]],
+["Avaliação de desempenho","a",[
+["This review covers your work over the past six months.","Esta avaliação cobre seu trabalho nos últimos seis meses."],
+["Your productivity has improved significantly.","Sua produtividade melhorou significativamente."],
+["One area to work on is communication with other departments.","Uma área a desenvolver é a comunicação com outros setores."],
+["What goals would you like to set for next quarter?","Quais metas você gostaria de definir para o próximo trimestre?"],
+["I'd like to learn how to operate the forklift.","Eu gostaria de aprender a operar a empilhadeira."]]],
+["Pedindo uma promoção","a",[
+["Do you have a few minutes to talk about my career here?","Você tem alguns minutos para falar sobre minha carreira aqui?"],
+["Over the last year, I have trained four new employees.","No último ano, eu treinei quatro funcionários novos."],
+["I've also taken on many of the shift lead's duties.","Também assumi muitas das funções do líder de turno."],
+["I believe I'm ready for a team lead position.","Acredito que estou pronto para uma vaga de líder de equipe."],
+["What would I need to do to be considered?","O que eu precisaria fazer para ser considerado?"]]],
+["Explicando um erro","a",[
+["I need to tell you about a mistake I made yesterday.","Preciso te contar sobre um erro que cometi ontem."],
+["I shipped the wrong items to one of our clients.","Eu enviei os itens errados para um dos nossos clientes."],
+["I've already contacted them and apologized.","Eu já entrei em contato com eles e pedi desculpas."],
+["The correct order will arrive tomorrow.","O pedido correto vai chegar amanhã."],
+["From now on, I'll double-check every label.","De agora em diante, vou conferir duas vezes cada etiqueta."]]],
+["Contrato de aluguel","a",[
+["Before you sign, please read the lease carefully.","Antes de assinar, por favor leia o contrato com atenção."],
+["The lease term is twelve months.","O prazo do contrato é de doze meses."],
+["A security deposit equal to one month's rent is required.","É exigido um depósito caução igual a um mês de aluguel."],
+["Late payments will be charged a fifty-dollar fee.","Pagamentos atrasados terão uma multa de cinquenta dólares."],
+["What happens if I need to break the lease early?","O que acontece se eu precisar quebrar o contrato antes?"]]],
+["Declaração de imposto","a",[
+["Tax season ends on April fifteenth.","A temporada de impostos termina em quinze de abril."],
+["Your employer will send you a W-2 form in January.","Seu empregador vai te enviar um formulário W-2 em janeiro."],
+["You may get a refund if too much tax was withheld.","Você pode receber restituição se foi retido imposto demais."],
+["Many people use software or a tax preparer.","Muitas pessoas usam um programa ou um contador."],
+["Keep copies of all your documents for several years.","Guarde cópias de todos os seus documentos por vários anos."]]],
+["Treinando um novo funcionário","a",[
+["Welcome aboard. I'll be training you this week.","Bem-vindo à equipe. Eu vou te treinar esta semana."],
+["Feel free to ask questions at any time.","Fique à vontade para fazer perguntas a qualquer momento."],
+["First, I'll walk you through our daily routine.","Primeiro, vou te mostrar nossa rotina diária."],
+["Watch me do it once, and then you try.","Me observe fazer uma vez e depois você tenta."],
+["Don't worry about speed yet; focus on accuracy.","Não se preocupe com velocidade ainda; foque na precisão."]]],
+["Pedindo demissão","a",[
+["I want to let you know that I'm resigning.","Quero te informar que estou pedindo demissão."],
+["I've accepted an offer from another company.","Aceitei uma proposta de outra empresa."],
+["This is my two weeks' notice.","Este é meu aviso prévio de duas semanas."],
+["I'm grateful for everything I learned here.","Sou grato por tudo que aprendi aqui."],
+["I'll make sure everything is ready before I leave.","Vou garantir que tudo esteja pronto antes de eu sair."]]],
+["Networking e agradecimento","a",[
+["It was a pleasure meeting you at the job fair.","Foi um prazer conhecer você na feira de empregos."],
+["Thank you for taking the time to talk with me.","Obrigado por tirar um tempo para conversar comigo."],
+["Your advice about certifications was very helpful.","Seu conselho sobre certificações foi muito útil."],
+["I'd love to stay in touch.","Eu adoraria manter contato."],
+["Please feel free to reach out if an opportunity comes up.","Fique à vontade para me procurar se surgir uma oportunidade."]]],
+// ---------- VIDA COTIDIANA ----------
+["Frutas no mercado","b",[
+["Are these apples on sale?","Estas maçãs estão em promoção?"],
+["Yes, they're two for one today.","Sim, estão leve duas, pague uma hoje."],
+["How much are the bananas?","Quanto custam as bananas?"],
+["They're sixty cents a pound.","Custam sessenta centavos a libra."],
+["I'll take a bunch, please.","Vou levar um cacho, por favor."]]],
+["Na padaria","b",[
+["What kind of bread do you have today?","Que tipo de pão vocês têm hoje?"],
+["We have whole wheat, sourdough, and rye.","Temos integral, de fermentação natural e de centeio."],
+["Can you slice it for me?","Você pode fatiar para mim?"],
+["Of course. Anything else?","Claro. Mais alguma coisa?"],
+["Two chocolate muffins, please.","Dois muffins de chocolate, por favor."]]],
+["E aí, tudo bem?","b",[
+["Hey, long time no see!","Ei, quanto tempo!"],
+["I know! How have you been?","Pois é! Como você tem estado?"],
+["Pretty good, just busy with work.","Bem, só ocupado com o trabalho."],
+["Let's grab a coffee sometime.","Vamos tomar um café qualquer dia."],
+["Sounds good. Text me!","Boa ideia. Me manda mensagem!"]]],
+["Combinando um cinema","b",[
+["Do you want to see a movie tonight?","Você quer ver um filme hoje à noite?"],
+["Sure, what's playing?","Claro, o que está passando?"],
+["There's a new comedy at eight.","Tem uma comédia nova às oito."],
+["Perfect. I'll buy the tickets online.","Perfeito. Vou comprar os ingressos pela internet."],
+["Let's meet in front of the theater.","Vamos nos encontrar na frente do cinema."]]],
+["No caixa","b",[
+["Did you find everything okay?","Encontrou tudo certinho?"],
+["Yes, thanks.","Sim, obrigado."],
+["Paper or plastic?","Sacola de papel ou de plástico?"],
+["I brought my own bag.","Eu trouxe minha própria sacola."],
+["Would you like your receipt?","Você quer o seu recibo?"]]],
+["Pedindo pizza por telefone","b",[
+["Hi, I'd like to order a pizza for delivery.","Oi, eu gostaria de pedir uma pizza para entrega."],
+["What size and toppings?","Qual tamanho e quais coberturas?"],
+["A large pepperoni with extra cheese.","Uma grande de pepperoni com queijo extra."],
+["What's your address?","Qual é o seu endereço?"],
+["It will be there in about thirty minutes.","Vai chegar em uns trinta minutos."]]],
+["No posto de gasolina","b",[
+["Is this pump working?","Esta bomba está funcionando?"],
+["You need to pay inside first.","Você precisa pagar lá dentro primeiro."],
+["Forty dollars on pump six, please.","Quarenta dólares na bomba seis, por favor."],
+["Where's the restroom?","Onde fica o banheiro?"],
+["It's around the corner, outside.","Fica do lado de fora, virando a esquina."]]],
+["Na barbearia","b",[
+["Do I need an appointment?","Eu preciso de horário marcado?"],
+["No, walk-ins are welcome.","Não, aceitamos sem hora marcada."],
+["How would you like your hair?","Como você quer o cabelo?"],
+["Short on the sides and a little longer on top.","Curto nas laterais e um pouco mais comprido em cima."],
+["How much do I owe you?","Quanto eu te devo?"]]],
+["O vizinho novo","b",[
+["Hi, I just moved in next door.","Oi, acabei de me mudar aqui do lado."],
+["Welcome to the neighborhood!","Bem-vindo ao bairro!"],
+["Trash pickup is on Tuesday mornings.","A coleta de lixo é nas terças de manhã."],
+["Thanks for the tip.","Obrigado pela dica."],
+["Let me know if you need anything.","Me avise se precisar de alguma coisa."]]],
+["Enviando um pacote","b",[
+["I'd like to send this package to Brazil.","Eu gostaria de enviar este pacote para o Brasil."],
+["Please fill out this customs form.","Por favor, preencha este formulário da alfândega."],
+["How long will it take?","Quanto tempo vai levar?"],
+["About two weeks by regular mail.","Umas duas semanas pelo correio comum."],
+["Here is your tracking number.","Aqui está seu código de rastreamento."]]],
+["Matrícula na academia","b",[
+["How much is a monthly membership?","Quanto custa a mensalidade?"],
+["It's thirty dollars with no contract.","São trinta dólares sem contrato."],
+["Can I try it for free first?","Posso experimentar de graça primeiro?"],
+["Yes, you get a free day pass.","Sim, você ganha um passe de um dia grátis."],
+["The gym is open twenty-four hours.","A academia fica aberta vinte e quatro horas."]]],
+["Convite para jantar","b",[
+["Are you free for dinner on Friday?","Você está livre para jantar na sexta?"],
+["Yes! Where do you want to go?","Sim! Aonde você quer ir?"],
+["I know a great Mexican place.","Eu conheço um ótimo restaurante mexicano."],
+["I love tacos. What time?","Eu amo tacos. Que horas?"],
+["Let's say seven thirty.","Vamos dizer sete e meia."]]],
+["Na biblioteca","b",[
+["How can I get a library card?","Como eu consigo um cartão da biblioteca?"],
+["You just need an ID and proof of address.","Você só precisa de um documento e comprovante de endereço."],
+["How many books can I borrow?","Quantos livros posso pegar emprestado?"],
+["Up to ten books for three weeks.","Até dez livros por três semanas."],
+["The library also has free Wi-Fi.","A biblioteca também tem Wi-Fi grátis."]]],
+["Remédio para gripe","b",[
+["I think I'm getting a cold.","Acho que estou ficando gripado."],
+["What do you recommend?","O que você recomenda?"],
+["This medicine helps with a stuffy nose.","Este remédio ajuda com nariz entupido."],
+["Drink lots of water and get some rest.","Beba muita água e descanse."],
+["If it gets worse, see a doctor.","Se piorar, vá a um médico."]]],
+["Falando de séries","i",[
+["Have you watched that new crime show?","Você viu aquela série policial nova?"],
+["Yes, I binge-watched it last weekend.","Sim, maratonei no fim de semana passado."],
+["No spoilers! I'm only on episode three.","Sem spoiler! Estou só no episódio três."],
+["Okay, but the ending is crazy.","Tá bom, mas o final é muito louco."],
+["Let me know when you finish it.","Me avisa quando terminar."]]],
+["Devolvendo um produto","i",[
+["I'd like to return this milk. It's expired.","Eu gostaria de devolver este leite. Está vencido."],
+["I'm so sorry about that.","Peço muitas desculpas por isso."],
+["Do you have your receipt?","Você tem o seu recibo?"],
+["Yes, I bought it yesterday.","Sim, comprei ontem."],
+["You can get a refund or a new one.","Você pode receber o dinheiro de volta ou um novo."]]],
+["Instalando a internet","i",[
+["I'd like to set up internet service at my new apartment.","Eu gostaria de instalar internet no meu apartamento novo."],
+["Which plan are you interested in?","Em qual plano você está interessado?"],
+["Something fast enough for video calls.","Algo rápido o suficiente para chamadas de vídeo."],
+["A technician can come on Wednesday between eight and noon.","Um técnico pode ir na quarta entre oito e meio-dia."],
+["Is there an installation fee?","Tem taxa de instalação?"]]],
+["Marcando o dentista","i",[
+["I'd like to schedule a cleaning.","Eu gostaria de marcar uma limpeza."],
+["Are you a new patient?","Você é paciente novo?"],
+["Yes, and I have a tooth that hurts.","Sim, e tenho um dente que está doendo."],
+["We have an opening next Monday at ten.","Temos um horário na próxima segunda às dez."],
+["Please arrive fifteen minutes early.","Por favor, chegue quinze minutos antes."]]],
+["Na oficina mecânica","i",[
+["My car is making a strange noise when I brake.","Meu carro está fazendo um barulho estranho quando eu freio."],
+["It's probably the brake pads.","Provavelmente são as pastilhas de freio."],
+["How much will it cost to fix?","Quanto vai custar para consertar?"],
+["Around two hundred dollars, parts and labor.","Uns duzentos dólares, peças e mão de obra."],
+["Can I pick it up this afternoon?","Posso buscar hoje à tarde?"]]],
+["Lavanderia a seco","i",[
+["I need this suit cleaned by Friday.","Preciso deste terno limpo até sexta."],
+["There's a stain on the jacket.","Tem uma mancha no paletó."],
+["We'll do our best to remove it.","Vamos fazer o possível para tirar."],
+["Can you also hem these pants?","Vocês também podem fazer a barra destas calças?"],
+["Here's your ticket. Don't lose it.","Aqui está seu comprovante. Não perca."]]],
+["Amigo pedindo conselho","i",[
+["Can I ask you for some advice?","Posso te pedir um conselho?"],
+["Of course. What's going on?","Claro. O que está acontecendo?"],
+["I got a job offer in another city.","Recebi uma proposta de emprego em outra cidade."],
+["That's great! But you seem worried.","Que ótimo! Mas você parece preocupado."],
+["I'm just afraid of starting over.","Só tenho medo de recomeçar."],
+["Change is scary, but you'll do great.","Mudança dá medo, mas você vai se sair bem."]]],
+["Festa surpresa","i",[
+["We're throwing a surprise party for Mike.","Vamos fazer uma festa surpresa para o Mike."],
+["Don't tell him anything!","Não conte nada para ele!"],
+["Can you bring the cake?","Você pode trazer o bolo?"],
+["Sure. What flavor does he like?","Claro. De que sabor ele gosta?"],
+["Everyone needs to be there by six.","Todo mundo precisa estar lá até as seis."]]],
+["Perdi minha carteira","i",[
+["I think I lost my wallet.","Acho que perdi minha carteira."],
+["When was the last time you had it?","Quando foi a última vez que você estava com ela?"],
+["At the coffee shop this morning.","Na cafeteria hoje de manhã."],
+["Let's call them and ask.","Vamos ligar para lá e perguntar."],
+["You should also block your cards.","Você também deveria bloquear seus cartões."]]],
+["Pegando um carro de aplicativo","i",[
+["My ride is two minutes away.","Meu carro está a dois minutos."],
+["Hi, are you Carlos?","Oi, você é o Carlos?"],
+["Yes. Can you take the highway? I'm in a hurry.","Sim. Pode ir pela rodovia? Estou com pressa."],
+["No problem. Buckle up, please.","Sem problema. Coloque o cinto, por favor."],
+["You can drop me off at the corner.","Pode me deixar na esquina."]]],
+["Trocando roupa na loja","i",[
+["Where are the fitting rooms?","Onde ficam os provadores?"],
+["These jeans are too tight.","Esta calça jeans está muito apertada."],
+["Do you have them in a bigger size?","Vocês têm num tamanho maior?"],
+["Can I exchange this shirt I bought last week?","Posso trocar esta camisa que comprei semana passada?"],
+["Yes, as long as the tags are still on.","Sim, desde que ainda esteja com a etiqueta."]]],
+["Falando de família","i",[
+["Do you have any brothers or sisters?","Você tem irmãos ou irmãs?"],
+["I have one older brother who lives in Texas.","Tenho um irmão mais velho que mora no Texas."],
+["Do you see him often?","Você vê ele com frequência?"],
+["Only on holidays, but we talk every week.","Só nos feriados, mas conversamos toda semana."],
+["My parents are visiting me next month.","Meus pais vão me visitar no mês que vem."]]],
+["No veterinário","i",[
+["My dog hasn't been eating for two days.","Meu cachorro não come há dois dias."],
+["Has he been drinking water?","Ele tem bebido água?"],
+["Yes, but he seems very tired.","Sim, mas parece muito cansado."],
+["Let's do a quick checkup and some tests.","Vamos fazer um exame rápido e alguns testes."],
+["He needs to take this medicine for a week.","Ele precisa tomar este remédio por uma semana."]]],
+["Cobrança errada na fatura","i",[
+["I was charged twice on my last bill.","Fui cobrado duas vezes na minha última fatura."],
+["Let me pull up your account.","Deixa eu abrir a sua conta."],
+["I see the double charge here.","Estou vendo a cobrança duplicada aqui."],
+["We'll credit it back within five business days.","Vamos estornar em até cinco dias úteis."],
+["Can you send me a confirmation email?","Pode me enviar um e-mail de confirmação?"]]],
+["Planejando uma viagem","i",[
+["We should take a road trip this summer.","Deveríamos fazer uma viagem de carro neste verão."],
+["How about the Grand Canyon?","Que tal o Grand Canyon?"],
+["Great idea, but it's a long drive.","Ótima ideia, mas é uma viagem longa."],
+["We can split the driving and the gas.","Podemos dividir a direção e a gasolina."],
+["I'll look for cheap hotels on the way.","Vou procurar hotéis baratos no caminho."]]],
+["Ajudando na mudança","i",[
+["Could you help me move this Saturday?","Você poderia me ajudar na mudança neste sábado?"],
+["Sure. Do you have a truck?","Claro. Você tem um caminhão?"],
+["I rented one for the morning.","Aluguei um para a manhã."],
+["Be careful with that box; it's fragile.","Cuidado com essa caixa; é frágil."],
+["Pizza is on me after we finish.","A pizza é por minha conta quando terminarmos."]]],
+["Assistindo ao jogo","i",[
+["Are you watching the game tonight?","Você vai assistir ao jogo hoje à noite?"],
+["Of course! Who are you rooting for?","Claro! Para quem você está torcendo?"],
+["The home team, always.","O time da casa, sempre."],
+["They need to win to make the playoffs.","Eles precisam ganhar para ir aos playoffs."],
+["Come over, I'll get some snacks.","Vem pra cá, vou comprar uns petiscos."]]],
+["Desabafo no café","i",[
+["You look stressed. Is everything okay?","Você parece estressado. Está tudo bem?"],
+["Not really. Work has been crazy lately.","Não muito. O trabalho anda uma loucura ultimamente."],
+["Do you want to talk about it?","Você quer falar sobre isso?"],
+["My boss keeps giving me more tasks.","Meu chefe continua me dando mais tarefas."],
+["Maybe you should talk to him about it.","Talvez você devesse conversar com ele sobre isso."]]],
+["Check-in no hotel","i",[
+["I have a reservation under the name Silva.","Tenho uma reserva no nome Silva."],
+["I'll need a credit card for incidentals.","Vou precisar de um cartão de crédito para despesas extras."],
+["What time is checkout?","Que horas é o check-out?"],
+["Checkout is at eleven, and breakfast is included.","O check-out é às onze, e o café da manhã está incluído."],
+["Your room is on the fourth floor.","Seu quarto fica no quarto andar."]]],
+["Cancelando uma assinatura","a",[
+["I'd like to cancel my gym membership.","Eu gostaria de cancelar minha matrícula na academia."],
+["May I ask why you're canceling?","Posso perguntar por que você está cancelando?"],
+["I'm moving to another state next month.","Vou me mudar para outro estado no mês que vem."],
+["We can offer you three months at half price.","Podemos oferecer três meses pela metade do preço."],
+["Thanks, but I'd still like to cancel, effective immediately.","Obrigado, mas ainda quero cancelar, com efeito imediato."]]],
+["Fazendo as pazes","a",[
+["Hey, I wanted to talk about what happened yesterday.","Ei, eu queria conversar sobre o que aconteceu ontem."],
+["I was out of line, and I'm sorry.","Eu passei dos limites e peço desculpas."],
+["I appreciate you saying that.","Agradeço por você dizer isso."],
+["I overreacted too, to be honest.","Eu também exagerei, para ser sincero."],
+["Our friendship matters more than an argument.","Nossa amizade importa mais do que uma discussão."]]],
+["Acionando o seguro do carro","a",[
+["I need to file a claim; someone hit my car in a parking lot.","Preciso abrir um sinistro; alguém bateu no meu carro num estacionamento."],
+["Did you get the other driver's information?","Você pegou os dados do outro motorista?"],
+["Yes, I have their license plate and insurance details.","Sim, tenho a placa e os dados do seguro."],
+["Please upload photos of the damage to the app.","Por favor, envie fotos do estrago pelo aplicativo."],
+["An adjuster will contact you within forty-eight hours.","Um avaliador vai entrar em contato em até quarenta e oito horas."]]],
+["Contestando uma multa","a",[
+["I received a parking ticket, but the sign was covered.","Recebi uma multa de estacionamento, mas a placa estava coberta."],
+["I took pictures as evidence.","Tirei fotos como prova."],
+["You can dispute it online within twenty-one days.","Você pode contestar pela internet em até vinte e um dias."],
+["Will I have to go to court?","Vou ter que ir ao tribunal?"],
+["Only if your appeal is denied.","Só se o seu recurso for negado."]]],
+["Orçamento do encanador","a",[
+["The pipe under the bathroom sink burst last night.","O cano embaixo da pia do banheiro estourou ontem à noite."],
+["Could you give me an estimate before you start?","Você poderia me dar um orçamento antes de começar?"],
+["It'll be around three hundred, depending on the damage.","Vai ficar em torno de trezentos, dependendo do estrago."],
+["Is the work guaranteed?","O serviço tem garantia?"],
+["Yes, we offer a one-year warranty on all repairs.","Sim, oferecemos garantia de um ano em todos os reparos."]]],
+["Reunião na escola","a",[
+["Thank you for meeting with me about my son.","Obrigado por se reunir comigo sobre meu filho."],
+["He's a bright student, but he struggles with reading.","Ele é um aluno inteligente, mas tem dificuldade com leitura."],
+["What can we do at home to help him?","O que podemos fazer em casa para ajudá-lo?"],
+["Reading together for twenty minutes a day makes a big difference.","Ler juntos vinte minutos por dia faz muita diferença."],
+["Let's check in again at the end of the semester.","Vamos conversar de novo no fim do semestre."]]],
+["Conversa sobre o futuro","a",[
+["Where do you see yourself in five years?","Onde você se vê daqui a cinco anos?"],
+["I'd like to own my own business someday.","Eu gostaria de ter meu próprio negócio algum dia."],
+["What's holding you back?","O que está te impedindo?"],
+["Mostly money, and a little fear of failing.","Principalmente dinheiro, e um pouco de medo de fracassar."],
+["Start small and save a little every month.","Comece pequeno e economize um pouco todo mês."]]],
+["Café da manhã na lanchonete","b",[
+["Can I get two eggs, scrambled, with toast?","Pode me trazer dois ovos mexidos com torrada?"],
+["Would you like bacon or sausage?","Você quer bacon ou linguiça?"],
+["Bacon, please, and a coffee.","Bacon, por favor, e um café."],
+["Refills are free.","O refil é grátis."],
+["Can I have some more napkins?","Pode me dar mais guardanapos?"]]],
+["No açougue","b",[
+["I need two pounds of ground beef.","Preciso de duas libras de carne moída."],
+["Lean or regular?","Magra ou comum?"],
+["Lean, please.","Magra, por favor."],
+["Do you have chicken thighs today?","Vocês têm coxa de frango hoje?"],
+["Yes, they're fresh this morning.","Sim, chegaram frescas hoje de manhã."]]],
+["Comprando sapatos","b",[
+["I'm looking for running shoes.","Estou procurando tênis de corrida."],
+["What size do you wear?","Que número você calça?"],
+["I wear a size ten.","Eu calço número dez."],
+["How do they feel?","Como estão no pé?"],
+["They're very comfortable. I'll take them.","Estão muito confortáveis. Vou levar."]]],
+["Tempo e roupas","b",[
+["It's going to snow tomorrow.","Vai nevar amanhã."],
+["I need to buy a warm coat.","Preciso comprar um casaco quente."],
+["Don't forget gloves and a hat.","Não esqueça luvas e gorro."],
+["I'm not used to the cold.","Não estou acostumado com o frio."],
+["You'll get used to it.","Você vai se acostumar."]]],
+["Pedindo algo ao vizinho","b",[
+["Sorry to bother you.","Desculpe incomodar."],
+["Can I borrow a ladder?","Posso pegar uma escada emprestada?"],
+["Sure, it's in the garage.","Claro, está na garagem."],
+["I'll bring it back this afternoon.","Eu devolvo hoje à tarde."],
+["No rush.","Sem pressa."]]],
+["Convite para correr","b",[
+["Do you want to go running tomorrow?","Você quer correr amanhã?"],
+["What time?","Que horas?"],
+["Early, around six.","Cedo, por volta das seis."],
+["That's too early for me!","É cedo demais para mim!"],
+["Okay, let's go at eight then.","Tá bom, vamos às oito então."]]],
+["Na sorveteria","b",[
+["Can I try the strawberry?","Posso provar o de morango?"],
+["Here you go.","Aqui está."],
+["I'll have one scoop in a cone.","Vou querer uma bola na casquinha."],
+["Would you like sprinkles?","Você quer granulado?"],
+["No, thanks.","Não, obrigado."]]],
+["Lavando o carro","b",[
+["How much is a basic wash?","Quanto custa uma lavagem simples?"],
+["It's ten dollars.","São dez dólares."],
+["Do you clean the inside too?","Vocês limpam por dentro também?"],
+["That's five dollars more.","São cinco dólares a mais."],
+["Okay, the full wash, please.","Tá bom, a lavagem completa, por favor."]]],
+["Na fila","b",[
+["Excuse me, is this the line?","Com licença, esta é a fila?"],
+["Yes, it's moving slowly.","Sim, está andando devagar."],
+["How long have you been waiting?","Há quanto tempo você está esperando?"],
+["About twenty minutes.","Uns vinte minutos."],
+["Wow, it's busy today.","Nossa, está movimentado hoje."]]],
+["No elevador","b",[
+["Which floor?","Qual andar?"],
+["Seven, please. Thanks.","Sete, por favor. Obrigado."],
+["Do you live in this building?","Você mora neste prédio?"],
+["Yes, I just moved here.","Sim, acabei de me mudar."],
+["Have a nice day!","Tenha um bom dia!"]]],
+["No parque com o cachorro","b",[
+["Your dog is so cute!","Seu cachorro é muito fofo!"],
+["Can I pet him?","Posso fazer carinho nele?"],
+["Sure, he's very friendly.","Claro, ele é muito dócil."],
+["How old is he?","Quantos anos ele tem?"],
+["He's three years old.","Ele tem três anos."]]],
+["Passagem de trem","b",[
+["One round-trip ticket to Boston, please.","Uma passagem de ida e volta para Boston, por favor."],
+["When are you coming back?","Quando você vai voltar?"],
+["On Sunday evening.","No domingo à noite."],
+["Which platform does it leave from?","De qual plataforma ele sai?"],
+["Platform four, in ten minutes.","Plataforma quatro, em dez minutos."]]],
+["Aniversário do amigo","b",[
+["Happy birthday!","Feliz aniversário!"],
+["I got you a small gift.","Eu trouxe um presentinho para você."],
+["Thank you! You didn't have to.","Obrigado! Não precisava."],
+["How old are you now?","Quantos anos você está fazendo?"],
+["Let's cut the cake!","Vamos cortar o bolo!"]]],
+["Na feira","b",[
+["These tomatoes look great.","Estes tomates parecem ótimos."],
+["They're from our farm.","São da nossa fazenda."],
+["Do you take cards?","Vocês aceitam cartão?"],
+["Only cash, sorry.","Só dinheiro, desculpe."],
+["There's an ATM over there.","Tem um caixa eletrônico ali."]]],
+["No drive-thru","i",[
+["Welcome, what can I get started for you?","Bem-vindo, o que vai querer?"],
+["I'll have a number three combo.","Vou querer o combo número três."],
+["What would you like to drink with that?","O que você quer beber com isso?"],
+["A diet soda, no ice.","Um refrigerante diet, sem gelo."],
+["Please pull up to the second window.","Por favor, siga até a segunda janela."]]],
+["Comida brasileira","i",[
+["What's your favorite Brazilian food?","Qual é a sua comida brasileira favorita?"],
+["Definitely feijoada, a black bean stew.","Com certeza a feijoada, um ensopado de feijão preto."],
+["It sounds delicious.","Parece delicioso."],
+["I'll make it for you someday.","Vou fazer para você algum dia."],
+["I'll bring the drinks!","Eu levo as bebidas!"]]],
+["Esqueci minha bolsa no metrô","i",[
+["I left my backpack on the subway this morning.","Deixei minha mochila no metrô hoje de manhã."],
+["Which line were you on?","Em qual linha você estava?"],
+["The red line, around eight fifteen.","Na linha vermelha, por volta das oito e quinze."],
+["Can you describe it?","Você pode descrevê-la?"],
+["It's black with a laptop inside.","É preta, com um notebook dentro."]]],
+["Falta de luz","i",[
+["The power went out in my building.","A luz acabou no meu prédio."],
+["We're aware of the outage in your area.","Estamos cientes da queda de energia na sua região."],
+["Do you know when it'll be back?","Vocês sabem quando vai voltar?"],
+["We expect it within three hours.","Esperamos que volte em até três horas."],
+["Keep your fridge closed to save the food.","Mantenha a geladeira fechada para conservar a comida."]]],
+["Marcando médico","i",[
+["I'd like to make an appointment for a checkup.","Eu gostaria de marcar uma consulta de rotina."],
+["Is this your first time with us?","É a sua primeira vez conosco?"],
+["Yes. Do you accept my insurance?","Sim. Vocês aceitam o meu plano?"],
+["Let me check. What's the name of your plan?","Deixa eu verificar. Qual é o nome do seu plano?"],
+["We'll text you a reminder the day before.","Vamos te mandar um lembrete por mensagem no dia anterior."]]],
+["Indicação de restaurante","i",[
+["Can you recommend a good place to eat around here?","Você pode recomendar um bom lugar para comer por aqui?"],
+["What kind of food do you like?","De que tipo de comida você gosta?"],
+["Something casual and not too expensive.","Algo simples e não muito caro."],
+["There's a great burger place two blocks away.","Tem uma hamburgueria ótima a dois quarteirões."],
+["Go early, because it gets crowded.","Vá cedo, porque fica lotado."]]],
+["Aprendendo inglês","i",[
+["Your English is getting much better.","Seu inglês está ficando muito melhor."],
+["Thanks, I practice a little every day.","Obrigado, eu pratico um pouco todo dia."],
+["The hardest part is understanding fast speakers.","A parte mais difícil é entender quem fala rápido."],
+["Try watching shows with subtitles.","Tente assistir séries com legenda."],
+["And don't be afraid to make mistakes.","E não tenha medo de errar."]]],
+["Celular quebrado","i",[
+["I dropped my phone and the screen cracked.","Deixei meu celular cair e a tela rachou."],
+["Is it still under warranty?","Ainda está na garantia?"],
+["I think so; I bought it six months ago.","Acho que sim; comprei há seis meses."],
+["The warranty doesn't cover accidents.","A garantia não cobre acidentes."],
+["A screen replacement costs about a hundred dollars.","A troca da tela custa uns cem dólares."]]],
+["Bazar de garagem","i",[
+["How much do you want for this lamp?","Quanto você quer por esta luminária?"],
+["Fifteen dollars.","Quinze dólares."],
+["Would you take ten?","Você aceita dez?"],
+["Make it twelve and it's yours.","Faço por doze e é seu."],
+["Deal!","Fechado!"]]],
+["Recebendo um amigo em casa","i",[
+["Make yourself at home.","Fique à vontade."],
+["You can sleep in the guest room.","Você pode dormir no quarto de hóspedes."],
+["Here's the Wi-Fi password.","Aqui está a senha do Wi-Fi."],
+["Help yourself to anything in the fridge.","Pegue o que quiser na geladeira."],
+["Thanks for having me.","Obrigado por me receber."]]],
+["Trancado do lado de fora","i",[
+["I locked myself out of my apartment.","Fiquei trancado do lado de fora do meu apartamento."],
+["How soon can a locksmith get here?","Em quanto tempo um chaveiro consegue chegar?"],
+["In about forty-five minutes.","Em uns quarenta e cinco minutos."],
+["How much will it cost?","Quanto vai custar?"],
+["I'll need to see proof that you live there.","Vou precisar ver um comprovante de que você mora aí."]]],
+["Bagagem extraviada","i",[
+["My suitcase didn't come out on the carousel.","Minha mala não saiu na esteira."],
+["Do you have your baggage claim tag?","Você tem o comprovante de bagagem?"],
+["Yes, here it is.","Sim, aqui está."],
+["It's still in Miami. It'll arrive on the next flight.","Ela ainda está em Miami. Vai chegar no próximo voo."],
+["We'll deliver it to your hotel tonight.","Vamos entregá-la no seu hotel hoje à noite."]]],
+["Vou me atrasar","i",[
+["Hey, I'm running about fifteen minutes late.","Ei, vou me atrasar uns quinze minutos."],
+["Traffic is terrible.","O trânsito está horrível."],
+["No worries, I'll grab us a table.","Sem problemas, vou pegar uma mesa para a gente."],
+["Should I order for you?","Quer que eu peça para você?"],
+["Yes, please. Get me the usual.","Sim, por favor. Pede o de sempre."]]],
+["Cozinhando juntos","i",[
+["Can you chop the onions?","Você pode picar as cebolas?"],
+["Sure. How small?","Claro. Em pedaços de que tamanho?"],
+["Pretty small, please.","Bem pequenos, por favor."],
+["Should I turn on the oven?","Eu ligo o forno?"],
+["Yes, set it to three hundred fifty degrees.","Sim, coloque em trezentos e cinquenta graus."]]],
+["Pedido errado","i",[
+["Excuse me, I think this isn't what I ordered.","Com licença, acho que isto não é o que eu pedi."],
+["I asked for no onions.","Eu pedi sem cebola."],
+["I'm so sorry. I'll fix that right away.","Sinto muito. Vou resolver isso agora mesmo."],
+["Thank you, I appreciate it.","Obrigado, agradeço."],
+["Dessert is on the house today.","A sobremesa hoje é por conta da casa."]]],
+["Amigo terminou o namoro","i",[
+["I heard you and Sarah broke up.","Fiquei sabendo que você e a Sarah terminaram."],
+["Yeah, it's been a hard week.","Pois é, foi uma semana difícil."],
+["I'm sorry, man. Do you want to talk?","Sinto muito, cara. Quer conversar?"],
+["Maybe later. Right now I just need to get out of the house.","Talvez depois. Agora só preciso sair de casa."],
+["Let's go shoot some pool.","Vamos jogar sinuca."]]],
+["Alugando um carro","i",[
+["I have a reservation for a compact car.","Tenho uma reserva para um carro compacto."],
+["Would you like to add insurance?","Você quer adicionar seguro?"],
+["What does it cover?","O que ele cobre?"],
+["Please return it with a full tank.","Por favor, devolva com o tanque cheio."],
+["The car is in spot twelve.","O carro está na vaga doze."]]],
+["Ação de Graças","i",[
+["What are you doing for Thanksgiving?","O que você vai fazer no Dia de Ação de Graças?"],
+["I don't have plans yet.","Ainda não tenho planos."],
+["Come to my family's house!","Vem para a casa da minha família!"],
+["Are you sure? I don't want to impose.","Tem certeza? Não quero incomodar."],
+["Of course! There's always too much turkey.","Claro! Sempre sobra peru demais."]]],
+["Ligando a conta de luz","a",[
+["I'm moving in next week and need to start electric service.","Vou me mudar semana que vem e preciso ligar a energia."],
+["I'll need your Social Security number or a deposit.","Vou precisar do seu número de Seguro Social ou de um depósito."],
+["I don't have a credit history here yet.","Ainda não tenho histórico de crédito aqui."],
+["Then a deposit of one hundred fifty dollars is required.","Então é necessário um depósito de cento e cinquenta dólares."],
+["It'll be refunded after a year of on-time payments.","Ele será devolvido após um ano de pagamentos em dia."]]],
+["Barulho do vizinho","a",[
+["Hi, I live downstairs. Do you have a minute?","Oi, eu moro no andar de baixo. Tem um minuto?"],
+["The music has been pretty loud late at night.","A música tem estado bem alta tarde da noite."],
+["I have to wake up early for work.","Eu preciso acordar cedo para trabalhar."],
+["Oh, I had no idea. I'm really sorry.","Ah, eu não fazia ideia. Desculpe mesmo."],
+["I'll keep it down after ten from now on.","Vou abaixar depois das dez daqui para frente."]]],
+["Negociando carro usado","a",[
+["The car looks good, but it has high mileage.","O carro está bonito, mas tem quilometragem alta."],
+["Has it ever been in an accident?","Ele já se envolveu em algum acidente?"],
+["I'd like a mechanic to inspect it before I decide.","Quero que um mecânico inspecione antes de eu decidir."],
+["The tires will need to be replaced soon.","Os pneus vão precisar ser trocados logo."],
+["Would you consider lowering the price by a thousand?","Você consideraria baixar o preço em mil?"]]],
+["Voo cancelado","a",[
+["My flight was canceled, and I'd like a full refund.","Meu voo foi cancelado e eu gostaria do reembolso total."],
+["We can rebook you on tomorrow's flight at no charge.","Podemos remarcar você no voo de amanhã sem custo."],
+["That won't work; I'll miss an important event.","Não dá; eu vou perder um evento importante."],
+["I understand. The refund will go back to your original card.","Entendo. O reembolso volta para o seu cartão original."],
+["Could I also get a hotel voucher for tonight?","Eu poderia receber também um voucher de hotel para hoje?"]]],
+["Ajudando com o currículo","a",[
+["Could you take a look at my resume?","Você poderia dar uma olhada no meu currículo?"],
+["Sure. First, keep it to one page.","Claro. Primeiro, mantenha em uma página."],
+["Use action verbs like managed, built, or improved.","Use verbos de ação como gerenciei, construí ou melhorei."],
+["Add numbers to show your results.","Coloque números para mostrar seus resultados."],
+["And always tailor it to the job you're applying for.","E sempre adapte para a vaga à qual está se candidatando."]]],
+["Economizando dinheiro","a",[
+["How do you manage to save so much?","Como você consegue economizar tanto?"],
+["I set aside twenty percent of every paycheck.","Separo vinte por cento de cada salário."],
+["I also cook at home instead of eating out.","Também cozinho em casa em vez de comer fora."],
+["Do you use a budgeting app?","Você usa algum aplicativo de orçamento?"],
+["Yes, it shows me exactly where my money goes.","Sim, ele me mostra exatamente para onde vai meu dinheiro."]]],
+["Reunião do condomínio","a",[
+["The association is proposing an increase in monthly fees.","A associação está propondo um aumento na taxa mensal."],
+["The money would go toward repairing the roof.","O dinheiro seria usado para consertar o telhado."],
+["Can we get quotes from at least three contractors?","Podemos pegar orçamentos de pelo menos três empreiteiras?"],
+["That's a reasonable request.","É um pedido razoável."],
+["We'll vote on it at the next meeting.","Vamos votar isso na próxima reunião."]]],
+["Despedida de um amigo","a",[
+["I can't believe you're moving back to Brazil.","Não acredito que você vai voltar para o Brasil."],
+["I'm going to miss our Friday dinners.","Vou sentir falta dos nossos jantares de sexta."],
+["Me too, but we'll stay in touch.","Eu também, mas vamos manter contato."],
+["You have to visit me in São Paulo.","Você tem que me visitar em São Paulo."],
+["I promise I will. Have a safe flight!","Prometo que vou. Boa viagem!"]]]
+];
+const LV={b:"Básico",i:"Intermediário",a:"Avançado"};
+
+// ---------- estado local ----------
+function load(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}}
+function save(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}
+let done=load("ee_done",{});           // {id:true}
+let pos=load("ee_pos",{});             // {id:frase atual}
+let custom=load("ee_custom",[]);       // [{title,s:[[en,pt],...]}]
+let docRef=null,saveT=null;
+function persist(){
+  save("ee_done",done);save("ee_pos",pos);save("ee_custom",custom);
+  clearTimeout(saveT);saveT=setTimeout(()=>{if(docRef)docRef.set({done,pos,custom:JSON.stringify(custom)}).catch(()=>{})},800);
+}
+async function initDb(){
+  try{
+    if(!(window.claude&&claude.use))return;
+    const [db,user]=await Promise.all([claude.use("db"),claude.use("user")]);
+    if(!db||!user)return;
+    const uid=await user.id();if(!uid)return;
+    docRef=db.collection("data/users/"+uid).doc("progresso");
+    const snap=await docRef.get();
+    if(snap.exists){const d=snap.data();
+      done=Object.assign({},d.done||{},done);pos=Object.assign({},d.pos||{},pos);
+      try{const c=JSON.parse(d.custom||"[]");if(c.length>custom.length)custom=c}catch(e){}
+      if(!document.getElementById("typ"))home();}
+  }catch(e){}
+}
+let filter="all";
+const app=document.getElementById("app");
+const esc=s=>s.replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const norm=s=>s.replace(/[’‘]/g,"'").replace(/[“”]/g,'"').replace(/\s+/g," ");
+
+
+function all(){return L.map((l,i)=>({id:"L"+i,n:i+1,title:l[0],lv:l[1],s:l[2]}))
+  .concat(custom.map((c,i)=>({id:"C"+i,n:"M"+(i+1),title:c.title,lv:"m",s:c.s})))}
+
+// ---------- lista ----------
+let rate=load("ee_rate",1),voice=null;
+function pickVoice(){try{const v=speechSynthesis.getVoices();voice=v.find(z=>z.lang==="en-US"&&/natural|google|samantha/i.test(z.name))||v.find(z=>z.lang==="en-US")||v.find(z=>z.lang.startsWith("en"))||null}catch(e){}}
+try{pickVoice();speechSynthesis.onvoiceschanged=pickVoice}catch(e){}
+function stopSpeak(){try{speechSynthesis.cancel()}catch(e){}}
+function speak(t,onend){
+  if(!("speechSynthesis" in window)){window.open("https://translate.google.com/?sl=en&tl=pt&op=translate&text="+encodeURIComponent(t),"_blank");return}
+  stopSpeak();const u=new SpeechSynthesisUtterance(t);u.lang="en-US";u.rate=rate;if(voice)u.voice=voice;
+  if(onend){u.onend=onend;u.onerror=onend}
+  speechSynthesis.speak(u);
+}
+function home(){stopSpeak();
+  const items=all().filter(x=>filter==="all"||x.lv===filter);
+  const total=L.length,ok=L.filter((_,i)=>done["L"+i]).length;
+  app.innerHTML=`
+  <header><h1>Exit <span>English</span></h1><p class="sub">Digite o texto em inglês e veja a tradução surgir abaixo. Trabalho e vida nos EUA.</p></header>
+  <div class="bar">${[["all","Todas"],["b","Básico"],["i","Intermediário"],["a","Avançado"],["m","Meus textos"]].map(([k,t])=>`<button class="chip" data-f="${k}" aria-pressed="${filter===k}">${t}</button>`).join("")}
+  <span class="stat">${ok}/${total} concluídas</span></div>
+  ${filter==="m"||filter==="all"?addPanel():""}
+  <div class="list">${items.map(x=>`
+    <button class="exit" data-id="${x.id}">
+      <span class="num">Exit<b>${x.n}</b></span>
+      <span class="t"><strong>${esc(x.title)}</strong><small>${x.lv==="m"?"Meu texto":LV[x.lv]} · ${x.s.length} frases${pos[x.id]?` · parou na frase ${pos[x.id]+1}`:""}</small></span>
+      ${done[x.id]?'<span class="done">FEITA</span>':""}
+    </button>`).join("")||'<p class="msg">Nenhum texto ainda. Cole um texto acima para criar sua lição.</p>'}</div>`;
+  app.querySelectorAll("[data-f]").forEach(b=>b.onclick=()=>{filter=b.dataset.f;home()});
+  app.querySelectorAll("[data-id]").forEach(b=>b.onclick=()=>lesson(b.dataset.id));
+  const go=document.getElementById("addGo");
+  if(go)go.onclick=addCustom;
+}
+function addPanel(){return `<section class="panel"><h2>Criar lição com seu texto</h2>
+  <label for="cTitle">Título</label><input id="cTitle" placeholder="Ex.: E-mail do meu chefe">
+  <label for="cText">Texto em inglês</label><textarea id="cText" rows="4" placeholder="Cole aqui um texto em inglês..."></textarea>
+  <div class="row"><button class="btn" id="addGo">Traduzir e criar lição</button><span class="msg" id="addMsg">A tradução é feita automaticamente.</span></div></section>`}
+
+async function addCustom(){
+  const text=document.getElementById("cText").value.trim();
+  const title=document.getElementById("cTitle").value.trim()||"Meu texto";
+  const msg=document.getElementById("addMsg"),btn=document.getElementById("addGo");
+  if(!text){msg.textContent="Cole um texto primeiro.";return}
+  const sents=(text.match(/[^.!?\n]+[.!?]*["')]*/g)||[]).map(s=>s.trim()).filter(Boolean).slice(0,40);
+  btn.disabled=true;msg.textContent="Traduzindo...";
+  let pts=null;
+  try{
+    const r=await fetch("/.netlify/functions/translate",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({texts:sents})});
+    if(!r.ok)throw new Error(r.status);
+    pts=(await r.json()).translations;
+    if(!Array.isArray(pts))pts=null;
+  }catch(e){msg.textContent=navigator.onLine?"Tradução indisponível agora. Tente mais tarde.":"Sem internet. A tradução precisa de conexão."}
+  custom.push({title,s:sents.map((s,i)=>[s,pts&&pts[i]?String(pts[i]):"(sem tradução)"])});
+  persist();btn.disabled=false;filter="m";home();
+}
+
+// ---------- lição ----------
+function lesson(id){
+  const x=all().find(y=>y.id===id);let cur=Math.min(pos[id]||0,x.s.length);if(cur>=x.s.length)cur=0;
+  app.innerHTML=`
+  <div class="lesson-head"><button class="btn ghost" id="back">← Voltar</button><h2>${esc(x.title)}</h2></div>
+  <span class="lvl">${x.lv==="m"?"Meu texto":LV[x.lv]} · Exit ${x.n}</span>
+  <div class="prog"><i id="pg"></i></div>
+  <section class="panel" id="sents"></section>
+  <section class="panel">
+    <label for="typ">Digite a frase destacada</label>
+    <textarea id="typ" rows="2" autocomplete="off" autocapitalize="off" spellcheck="false"></textarea>
+    <div class="row"><button class="btn ghost" id="listen">🔊 Ouvir frase</button><button class="btn ghost" id="listenAll">▶ Ouvir lição</button><button class="btn ghost" id="spd"></button><button class="btn ghost" id="skip">Pular frase</button>
+    <span class="hint">Maiúsculas não contam. Verde = certo, vermelho = errado.</span></div>
+  </section>`;
+  const box=document.getElementById("sents"),typ=document.getElementById("typ");
+  document.getElementById("back").onclick=home;
+  document.getElementById("skip").onclick=()=>next();
+  const lis=document.getElementById("listen"),la=document.getElementById("listenAll"),spd=document.getElementById("spd");
+  let playingAll=false;
+  const setSpd=()=>spd.textContent="Velocidade: "+(rate<1?"devagar":"normal");setSpd();
+  spd.onclick=()=>{rate=rate<1?1:.7;save("ee_rate",rate);setSpd()};
+  lis.onclick=()=>{if(x.s[cur])speak(x.s[cur][0])};
+  la.onclick=()=>{
+    if(playingAll){stopSpeak();playingAll=false;la.textContent="▶ Ouvir lição";return}
+    playingAll=true;la.textContent="■ Parar";let k=0;
+    const go=()=>{if(!playingAll||k>=x.s.length){playingAll=false;la.textContent="▶ Ouvir lição";return}speak(x.s[k++][0],go)};go();
+  };
+  box.onclick=e=>{const b=e.target.closest(".say");if(b)speak(x.s[+b.dataset.i][0])};
+  function render(){
+    const t=norm(typ.value);
+    box.innerHTML=x.s.map(([en,pt],i)=>{
+      if(i<cur)return `<div class="sent"><div class="en donee">${esc(en)}<button class="say" data-i="${i}" aria-label="Ouvir">🔊</button></div><div class="pt">${esc(pt)}</div></div>`;
+      if(i>cur)return "";
+      const tg=norm(en);let html="",good=0,ok=true;
+      for(let k=0;k<tg.length;k++){
+        const c=esc(tg[k]);
+        if(k<t.length){const m=t[k].toLowerCase()===tg[k].toLowerCase();if(m&&ok)good++;else ok=false;html+=`<span class="${m?"ok":"bad"}">${c}</span>`}
+        else html+=`<span class="p">${c}</span>`;
+      }
+      const w=pt.split(" "),show=Math.ceil(w.length*good/tg.length);
+      const ptHtml=w.map((z,j)=>j<show?esc(z):`<span class="h">${esc(z)}</span>`).join(" ");
+      return `<div class="sent cur"><div class="en">${html}</div><div class="pt">${ptHtml}</div></div>`;
+    }).join("")||`<div class="sent"><div class="en donee">Lição concluída! 🎉</div><div class="row"><button class="btn" id="again">Refazer</button><button class="btn ghost" id="home2">Outras lições</button></div></div>`;
+    document.getElementById("pg").style.width=(cur/x.s.length*100)+"%";
+    lis.hidden=!x.s[cur];
+    const a=document.getElementById("again");if(a){a.onclick=()=>lesson(id);document.getElementById("home2").onclick=home}
+  }
+  function next(){cur++;typ.value="";if(cur>=x.s.length){done[id]=true;pos[id]=0;typ.disabled=true}else pos[id]=cur;persist();render();if(cur<x.s.length)typ.focus()}
+  typ.oninput=()=>{if(cur<x.s.length&&norm(typ.value).trim().toLowerCase()===norm(x.s[cur][0]).toLowerCase())next();else render()};
+  typ.onkeydown=e=>{if(e.key==="Enter")e.preventDefault()};
+  render();typ.focus();window.scrollTo(0,0);
+}
+home();
+if("serviceWorker" in navigator)navigator.serviceWorker.register("sw.js").catch(()=>{});
+</script>
+
+</body></html>
