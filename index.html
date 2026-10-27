@@ -68,7 +68,18 @@ textarea:focus,input:focus{outline:none;border-color:var(--sign)}
 body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--bg)}
 .say{background:none;border:1px solid var(--line);color:var(--ink);border-radius:6px;padding:2px 8px;font-size:14px;cursor:pointer;margin-left:6px;vertical-align:middle}
 .lvl{font:700 11px var(--mono);text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
-@media (prefers-reduced-motion:reduce){.prog i{transition:none}}
+.pill{font:700 13px var(--mono);background:var(--sign);color:var(--sign-ink);border-radius:999px;padding:4px 10px;white-space:nowrap;font-variant-numeric:tabular-nums}
+.finish{background:var(--sign);color:var(--sign-ink);outline:2px solid var(--sign-ink);outline-offset:-7px;border-radius:12px;padding:22px 18px;display:grid;gap:10px;text-align:center;animation:pop .45s ease-out}
+.finish h3{font:800 26px/1.1 var(--display);margin:0}
+.finish .big{font:800 34px var(--display)}
+.finish p{margin:0;opacity:.9}
+.finish .row{justify-content:center}
+.finish .btn{background:var(--sign-ink);color:var(--sign)}
+.finish .btn.ghost{background:transparent;color:var(--sign-ink);border-color:var(--sign-ink)}
+.prog.full i{background:var(--ok);animation:flash .5s 3}
+@keyframes pop{from{transform:scale(.92);opacity:.3}to{transform:none;opacity:1}}
+@keyframes flash{50%{opacity:.3}}
+@media (prefers-reduced-motion:reduce){.prog i{transition:none}.finish,.prog.full i{animation:none}}
 </style>
 
 <style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}[hidden]{display:none!important}</style>
@@ -1474,13 +1485,14 @@ const LV={b:"Básico",i:"Intermediário",a:"Avançado",v:"Vocabulário",t:"Texto
 // ---------- estado local ----------
 function load(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}}
 function save(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}
+let pts=load("ee_pts",0);
 let done=load("ee_done",{});           // {id:true}
 let pos=load("ee_pos",{});             // {id:frase atual}
 let custom=load("ee_custom",[]);       // [{title,s:[[en,pt],...]}]
 let docRef=null,saveT=null;
 function persist(){
-  save("ee_done",done);save("ee_pos",pos);save("ee_custom",custom);
-  clearTimeout(saveT);saveT=setTimeout(()=>{if(docRef)docRef.set({done,pos,custom:JSON.stringify(custom)}).catch(()=>{})},800);
+  save("ee_done",done);save("ee_pts",pts);save("ee_pos",pos);save("ee_custom",custom);
+  clearTimeout(saveT);saveT=setTimeout(()=>{if(docRef)docRef.set({done,pos,pts,custom:JSON.stringify(custom)}).catch(()=>{})},800);
 }
 async function initDb(){
   try{
@@ -1491,7 +1503,7 @@ async function initDb(){
     docRef=db.collection("data/users/"+uid).doc("progresso");
     const snap=await docRef.get();
     if(snap.exists){const d=snap.data();
-      done=Object.assign({},d.done||{},done);pos=Object.assign({},d.pos||{},pos);
+      done=Object.assign({},d.done||{},done);pts=Math.max(pts,d.pts||0);pos=Object.assign({},d.pos||{},pos);
       try{const c=JSON.parse(d.custom||"[]");if(c.length>custom.length)custom=c}catch(e){}
       if(!document.getElementById("typ"))home();}
   }catch(e){}
@@ -1522,7 +1534,7 @@ function home(){stopSpeak();
   app.innerHTML=`
   <header><h1>Exit <span>English</span></h1><p class="sub">Digite o texto em inglês e veja a tradução surgir abaixo. Trabalho e vida nos EUA.</p></header>
   <div class="bar">${[["all","Todas"],["b","Básico"],["i","Intermediário"],["a","Avançado"],["v","Vocabulário"],["t","Textos"],["m","Meus textos"]].map(([k,t])=>`<button class="chip" data-f="${k}" aria-pressed="${filter===k}">${t}</button>`).join("")}
-  <span class="stat">${ok}/${total} concluídas</span></div>
+  <span class="stat">${ok}/${total} concluídas</span><span class="pill">★ ${pts} pts</span></div>
   ${filter==="m"||filter==="all"?addPanel():""}
   <div class="list">${items.map(x=>`
     <button class="exit" data-id="${x.id}">
@@ -1560,13 +1572,13 @@ async function addCustom(){
 
 // ---------- lição ----------
 function lesson(id){
-  const x=all().find(y=>y.id===id);let cur=Math.min(pos[id]||0,x.s.length);if(cur>=x.s.length)cur=0;
+  const x=all().find(y=>y.id===id);let cur=Math.min(pos[id]||0,x.s.length);if(cur>=x.s.length)cur=0;const t0=Date.now();let gained=0;
   app.innerHTML=`
-  <div class="lesson-head"><button class="btn ghost" id="back">← Voltar</button><h2>${esc(x.title)}</h2></div>
+  <div class="lesson-head"><button class="btn ghost" id="back">← Voltar</button><h2>${esc(x.title)}</h2><span class="pill" id="ptsPill">★ ${pts} pts</span></div>
   <span class="lvl">${x.lv==="m"?"Meu texto":LV[x.lv]} · Exit ${x.n}</span>
   <div class="prog"><i id="pg"></i></div>
   <section class="panel" id="sents"></section>
-  <section class="panel">
+  <section class="panel" id="typPanel">
     <label for="typ">Digite a frase destacada</label>
     <textarea id="typ" rows="2" autocomplete="off" autocapitalize="off" spellcheck="false"></textarea>
     <div class="row"><button class="btn ghost" id="listen">🔊 Ouvir frase</button><button class="btn ghost" id="listenAll">▶ Ouvir lição</button><button class="btn ghost" id="spd"></button><button class="btn ghost" id="skip">Pular frase</button>
@@ -1602,12 +1614,28 @@ function lesson(id){
       const w=pt.split(" "),show=Math.ceil(w.length*good/tg.length);
       const ptHtml=w.map((z,j)=>j<show?esc(z):`<span class="h">${esc(z)}</span>`).join(" ");
       return `<div class="sent cur"><div class="en">${html}</div><div class="pt">${ptHtml}</div></div>`;
-    }).join("")||`<div class="sent"><div class="en donee">Lição concluída! 🎉</div><div class="row"><button class="btn" id="again">Refazer</button><button class="btn ghost" id="home2">Outras lições</button></div></div>`;
+    }).join("");
+    const fin=cur>=x.s.length;
+    document.getElementById("typPanel").hidden=fin;
+    document.querySelector(".prog").classList.toggle("full",fin);
+    if(fin){
+      const sib=all().filter(y=>y.lv===x.lv),nx=sib[sib.findIndex(y=>y.id===id)+1];
+      const min=Math.max(1,Math.round((Date.now()-t0)/60000));
+      box.insertAdjacentHTML("afterend",`<section class="finish" id="finish">
+        <h3>Lição concluída! ✓</h3>
+        <div class="big">${gained?"+"+gained+" pontos":"Revisão feita"}</div>
+        <p>${x.s.length} frases · ${min} min · Total: ${pts} pontos</p>
+        <div class="row">${nx?'<button class="btn" id="nextL">Próxima lição →</button>':""}<button class="btn ghost" id="again">Refazer</button><button class="btn ghost" id="home2">Voltar à lista</button></div>
+      </section>`);
+      document.getElementById("ptsPill").textContent="★ "+pts+" pts";
+      if(nx)document.getElementById("nextL").onclick=()=>lesson(nx.id);
+      document.getElementById("finish").scrollIntoView({behavior:"smooth",block:"center"});
+    }
     document.getElementById("pg").style.width=(cur/x.s.length*100)+"%";
     lis.hidden=!x.s[cur];
     const a=document.getElementById("again");if(a){a.onclick=()=>lesson(id);document.getElementById("home2").onclick=goHome}
   }
-  function next(){cur++;typ.value="";if(cur>=x.s.length){done[id]=true;pos[id]=0;typ.disabled=true}else pos[id]=cur;persist();render();if(cur<x.s.length)typ.focus()}
+  function next(){cur++;typ.value="";if(cur>=x.s.length){if(!done[id]){gained=10;pts+=10}done[id]=true;pos[id]=0;typ.disabled=true}else pos[id]=cur;persist();render();if(cur<x.s.length)typ.focus()}
   typ.oninput=()=>{if(cur<x.s.length&&norm(typ.value).trim().toLowerCase()===norm(x.s[cur][0]).toLowerCase())next();else render()};
   typ.onkeydown=e=>{if(e.key==="Enter")e.preventDefault()};
   render();typ.focus();window.scrollTo(0,0);
