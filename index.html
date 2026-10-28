@@ -68,6 +68,12 @@ textarea:focus,input:focus{outline:none;border-color:var(--sign)}
 body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--bg)}
 .say{background:none;border:1px solid var(--line);color:var(--ink);border-radius:6px;padding:2px 8px;font-size:14px;cursor:pointer;margin-left:6px;vertical-align:middle}
 .lvl{font:700 11px var(--mono);text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
+.who{font:700 11px var(--mono);text-transform:uppercase;letter-spacing:.06em;color:var(--muted);display:block}
+.who.you{color:var(--sign)}
+.modes{display:flex;gap:6px;flex-wrap:wrap}
+.modes .chip:disabled{opacity:.5;cursor:default}
+.ask{font:600 15px var(--body);color:var(--pt);background:color-mix(in srgb,var(--pt) 8%,transparent);border-radius:6px;padding:6px 10px}
+#ans.okk{border-color:var(--ok)} #ans.bad{border-color:var(--bad)}
 .pill{font:700 13px var(--mono);background:var(--sign);color:var(--sign-ink);border-radius:999px;padding:4px 10px;white-space:nowrap;font-variant-numeric:tabular-nums}
 .finish{background:var(--sign);color:var(--sign-ink);outline:2px solid var(--sign-ink);outline-offset:-7px;border-radius:12px;padding:22px 18px;display:grid;gap:10px;text-align:center;animation:pop .45s ease-out}
 .finish h3{font:800 26px/1.1 var(--display);margin:0}
@@ -1480,6 +1486,7 @@ const L=[
 ["Step by step, word by word, I am building the life I imagined.","Passo a passo, palavra por palavra, estou construindo a vida que imaginei."]]]
 
 ];
+const SPK={"0": ["Supervisora", "YYOYO"], "1": ["Atendente", "OYOYO"], "2": ["Funcionário", "YOOYO"], "3": ["Motorista", "YOYOY"], "4": ["Pedestre", "YOOOYO"], "5": ["Supervisor", "YOYOO"], "6": ["Garçom", "YOYOYY"], "7": ["Proprietário", "YYOYOY"], "8": ["Bancário", "YOYOO"], "9": ["Vendedor", "YOYOY"], "10": ["Colega", "OYOYO"], "11": ["Supervisor", "YYOOY"], "12": ["Colega", "YOYOO"], "13": ["Amigo", "OYOYO"], "14": ["Entrevistador", "OYOYOY"], "15": ["Supervisor", "OOOOO"], "16": ["Gerente", "YYOYO"], "17": ["RH", "OOYOO"], "18": ["Recepcionista", "YOYOO"], "19": ["Funcionário", "YOYOO"], "20": ["Síndico", "YYOOY"], "21": ["Gerente", "YOYOO"], "22": ["Cliente", "YOYYY"], "23": ["Colega", "YYOYO"], "24": ["Atendente", "YOOOO"], "25": ["Farmacêutico", "YOOYO"], "26": ["Gerente", "OOOYO"], "27": ["Gerente", "YOOYO"], "28": ["Gerente", "OOOYOO"], "29": ["Recrutador", "YYYOY"], "30": ["Cliente", "OYYYY"], "31": ["Destinatário", "YYYYYY"], "32": ["Gerente", "OOOOY"], "33": ["Gerente", "YYYYY"], "34": ["Gerente", "YYYYY"], "35": ["Proprietário", "OOOOY"], "36": ["Contador", "OOOOO"], "37": ["Novato", "YYYYY"], "38": ["Gerente", "YYYYY"], "39": ["Contato", "YYYYY"], "40": ["Feirante", "YOYOY"], "41": ["Padeiro", "YOYOY"], "42": ["Amigo", "OYOYO"], "43": ["Amigo", "OYOYO"], "44": ["Caixa", "OYOYO"], "45": ["Atendente", "YOYOO"], "46": ["Frentista", "YOYYO"], "47": ["Barbeiro", "YOOYY"], "48": ["Vizinho", "YOOYO"], "49": ["Atendente", "YOYOO"], "50": ["Recepcionista", "YOYOO"], "51": ["Amigo", "OYOYO"], "52": ["Bibliotecária", "YOYOO"], "53": ["Farmacêutico", "YYOOO"], "54": ["Amigo", "OYOYY"], "55": ["Atendente", "YOOYO"], "56": ["Atendente", "YOYOY"], "57": ["Recepcionista", "YOYOO"], "58": ["Mecânico", "YOYOY"], "59": ["Atendente", "YYOYO"], "60": ["Amigo", "OYOYOY"], "61": ["Amiga", "OOOYO"], "62": ["Amigo", "YOYOO"], "63": ["Motorista", "YOYOY"], "64": ["Vendedora", "YYYYO"], "65": ["Colega", "OYOYY"], "66": ["Veterinário", "YOYOO"], "67": ["Atendente", "YOOOY"], "68": ["Amigo", "YOYOY"], "69": ["Amigo", "YOYYY"], "70": ["Amigo", "OYOYO"], "71": ["Amigo", "OYOYO"], "72": ["Recepcionista", "YOYOO"], "73": ["Atendente", "YOYOY"], "74": ["Amigo", "YYOOY"], "75": ["Seguradora", "YOYOO"], "76": ["Atendente", "YYOYO"], "77": ["Encanador", "YYOYO"], "78": ["Professora", "YOYOO"], "79": ["Amigo", "OYOYO"], "80": ["Garçonete", "YOYOY"], "81": ["Açougueiro", "YOYYO"], "82": ["Vendedor", "YOYOY"], "83": ["Amigo", "OYOYO"], "84": ["Vizinho", "YYOYO"], "85": ["Amigo", "OYOYO"], "86": ["Atendente", "YOYOY"], "87": ["Atendente", "YOYOY"], "88": ["Pessoa na fila", "YOYOY"], "89": ["Vizinho", "OYOYO"], "90": ["Dono do cachorro", "YYOYO"], "91": ["Bilheteiro", "YOYYO"], "92": ["Amigo", "YYOYO"], "93": ["Feirante", "YOYOO"], "94": ["Atendente", "OYOYO"], "95": ["Amigo", "OYOYO"], "96": ["Funcionário", "YOYOY"], "97": ["Atendente", "YOYOO"], "98": ["Recepcionista", "YOYOO"], "99": ["Morador", "YOYOO"], "100": ["Amigo", "OYYOO"], "101": ["Vendedor", "YOYOO"], "102": ["Vendedor", "YOYOY"], "103": ["Anfitrião", "OOOOY"], "104": ["Chaveiro", "YYOYO"], "105": ["Atendente", "YOYOO"], "106": ["Amigo", "OOYYO"], "107": ["Amigo", "OYOYO"], "108": ["Garçom", "YYOYO"], "109": ["Amigo", "YOYOY"], "110": ["Atendente", "YOYOO"], "111": ["Amigo", "OYOYO"], "112": ["Atendente", "YOYOO"], "113": ["Vizinho", "YYYOO"], "114": ["Vendedor", "YYYOY"], "115": ["Atendente", "YOYOY"], "116": ["Amigo", "YOOOO"], "117": ["Amigo", "YOOYO"], "118": ["Síndico", "OOYOO"], "119": ["Amigo", "OOYYO"]};
 const LV={b:"Básico",i:"Intermediário",a:"Avançado",v:"Vocabulário",t:"Textos"};
 
 // ---------- estado local ----------
@@ -1540,7 +1547,7 @@ function home(){stopSpeak();
     <button class="exit" data-id="${x.id}">
       <span class="num">Exit<b>${x.n}</b></span>
       <span class="t"><strong>${esc(x.title)}</strong><small>${x.lv==="m"?"Meu texto":LV[x.lv]} · ${x.s.length} frases${pos[x.id]?` · parou na frase ${pos[x.id]+1}`:""}</small></span>
-      ${done[x.id]?'<span class="done">FEITA</span>':""}
+      ${done[x.id+"R"]?'<span class="done">FEITA ★</span>':done[x.id]?'<span class="done">FEITA</span>':""}
     </button>`).join("")||'<p class="msg">Nenhum texto ainda. Cole um texto acima para criar sua lição.</p>'}</div>`;
   app.querySelectorAll("[data-f]").forEach(b=>b.onclick=()=>{filter=b.dataset.f;home()});
   app.querySelectorAll("[data-id]").forEach(b=>b.onclick=()=>lesson(b.dataset.id));
@@ -1571,11 +1578,15 @@ async function addCustom(){
 }
 
 // ---------- lição ----------
-function lesson(id){
-  const x=all().find(y=>y.id===id);let cur=Math.min(pos[id]||0,x.s.length);if(cur>=x.s.length)cur=0;const t0=Date.now();let gained=0;
+function lesson(id,mode){
+  const x=all().find(y=>y.id===id);
+  const sp=x.id[0]==="L"?SPK[x.id.slice(1)]:null;
+  const canR=!!(sp&&sp[1].includes("Y")&&sp[1].includes("O"));
+  if(mode==="r"&&canR&&done[id])return respond(x,sp);let cur=Math.min(pos[id]||0,x.s.length);if(cur>=x.s.length)cur=0;const t0=Date.now();let gained=0;
   app.innerHTML=`
   <div class="lesson-head"><button class="btn ghost" id="back">← Voltar</button><h2>${esc(x.title)}</h2><span class="pill" id="ptsPill">★ ${pts} pts</span></div>
   <span class="lvl">${x.lv==="m"?"Meu texto":LV[x.lv]} · Exit ${x.n}</span>
+  ${canR?modeBar(id,"p"):""}
   <div class="prog"><i id="pg"></i></div>
   <section class="panel" id="sents"></section>
   <section class="panel" id="typPanel">
@@ -1587,7 +1598,8 @@ function lesson(id){
   const box=document.getElementById("sents"),typ=document.getElementById("typ");
   if(history.state&&history.state.l)history.replaceState({l:id},"");else history.pushState({l:id},"");
   const goHome=()=>{if(history.state&&history.state.l)history.back();else home()};
-  document.getElementById("back").onclick=goHome;
+  document.getElementById("back").onclick=goHome;bindModes(id);
+  const who=i=>sp?`<span class="who${sp[1][i]==="Y"?" you":""}">${sp[1][i]==="Y"?"Você":esc(sp[0])}</span>`:"";
   document.getElementById("skip").onclick=()=>next();
   const lis=document.getElementById("listen"),la=document.getElementById("listenAll"),spd=document.getElementById("spd");
   let playingAll=false;
@@ -1603,7 +1615,7 @@ function lesson(id){
   function render(){
     const t=norm(typ.value);
     box.innerHTML=x.s.map(([en,pt],i)=>{
-      if(i<cur)return `<div class="sent"><div class="en donee">${esc(en)}<button class="say" data-i="${i}" aria-label="Ouvir">🔊</button></div><div class="pt">${esc(pt)}</div></div>`;
+      if(i<cur)return `<div class="sent">${who(i)}<div class="en donee">${esc(en)}<button class="say" data-i="${i}" aria-label="Ouvir">🔊</button></div><div class="pt">${esc(pt)}</div></div>`;
       if(i>cur)return "";
       const tg=norm(en);let html="",good=0,ok=true;
       for(let k=0;k<tg.length;k++){
@@ -1613,7 +1625,7 @@ function lesson(id){
       }
       const w=pt.split(" "),show=Math.ceil(w.length*good/tg.length);
       const ptHtml=w.map((z,j)=>j<show?esc(z):`<span class="h">${esc(z)}</span>`).join(" ");
-      return `<div class="sent cur"><div class="en">${html}</div><div class="pt">${ptHtml}</div></div>`;
+      return `<div class="sent cur">${who(i)}<div class="en">${html}</div><div class="pt">${ptHtml}</div></div>`;
     }).join("");
     const fin=cur>=x.s.length;
     document.getElementById("typPanel").hidden=fin;
@@ -1622,13 +1634,14 @@ function lesson(id){
       const sib=all().filter(y=>y.lv===x.lv),nx=sib[sib.findIndex(y=>y.id===id)+1];
       const min=Math.max(1,Math.round((Date.now()-t0)/60000));
       box.insertAdjacentHTML("afterend",`<section class="finish" id="finish">
-        <h3>Lição concluída! ✓</h3>
+        <h3>Lição concluída! ✓</h3>${canR&&!done[id+"R"]?"<p>Modo Responder liberado!</p>":""}
         <div class="big">${gained?"+"+gained+" pontos":"Revisão feita"}</div>
         <p>${x.s.length} frases · ${min} min · Total: ${pts} pontos</p>
-        <div class="row">${nx?'<button class="btn" id="nextL">Próxima lição →</button>':""}<button class="btn ghost" id="again">Refazer</button><button class="btn ghost" id="home2">Voltar à lista</button></div>
+        <div class="row">${nx?'<button class="btn" id="nextL">Próxima lição →</button>':""}${canR?'<button class="btn ghost" id="toR">Modo Responder</button>':""}<button class="btn ghost" id="again">Refazer</button><button class="btn ghost" id="home2">Voltar à lista</button></div>
       </section>`);
       document.getElementById("ptsPill").textContent="★ "+pts+" pts";
       if(nx)document.getElementById("nextL").onclick=()=>lesson(nx.id);
+      if(canR)document.getElementById("toR").onclick=()=>lesson(id,"r");
       document.getElementById("finish").scrollIntoView({behavior:"smooth",block:"center"});
     }
     document.getElementById("pg").style.width=(cur/x.s.length*100)+"%";
@@ -1639,6 +1652,76 @@ function lesson(id){
   typ.oninput=()=>{if(cur<x.s.length&&norm(typ.value).trim().toLowerCase()===norm(x.s[cur][0]).toLowerCase())next();else render()};
   typ.onkeydown=e=>{if(e.key==="Enter")e.preventDefault()};
   render();typ.focus();window.scrollTo(0,0);
+}
+function modeBar(id,m){const ok=!!done[id];return `<div class="modes"><button class="chip" data-m="p" aria-pressed="${m==="p"}">Praticar</button><button class="chip" data-m="r" aria-pressed="${m==="r"}" ${ok?"":"disabled"}>${ok?"Responder":"🔒 Responder"}</button>${ok?"":'<span class="hint">Conclua o Praticar para liberar.</span>'}</div>`}
+function bindModes(id){app.querySelectorAll("[data-m]").forEach(b=>b.onclick=()=>{if(!b.disabled)lesson(id,b.dataset.m)})}
+const strip=s=>norm(s).toLowerCase().replace(/[^a-z0-9 ]/g,"").replace(/\s+/g," ").trim();
+function respond(x,sp){
+  stopSpeak();const id=x.id,t0=Date.now();let cur=0,helped=false,gained=0;
+  app.innerHTML=`
+  <div class="lesson-head"><button class="btn ghost" id="back">← Voltar</button><h2>${esc(x.title)}</h2><span class="pill" id="ptsPill">★ ${pts} pts</span></div>
+  <span class="lvl">${LV[x.lv]} · Exit ${x.n} · Responder</span>
+  ${modeBar(id,"r")}
+  <div class="prog"><i id="pg"></i></div>
+  <section class="panel" id="sents"></section>
+  <section class="panel" id="typPanel">
+    <label for="ans">Sua resposta em inglês</label>
+    <textarea id="ans" rows="2" autocomplete="off" autocapitalize="off" spellcheck="false"></textarea>
+    <div class="row"><button class="btn ghost" id="hint">💡 Dica</button><button class="btn ghost" id="show">👁 Ver resposta</button><button class="btn ghost" id="rep">🔊 Ouvir de novo</button>
+    <span class="hint">Pontuação e maiúsculas não contam.</span></div>
+    <div class="hint" id="help"></div>
+  </section>`;
+  if(history.state&&history.state.l)history.replaceState({l:id},"");else history.pushState({l:id},"");
+  const goHome=()=>{if(history.state&&history.state.l)history.back();else home()};
+  document.getElementById("back").onclick=goHome;bindModes(id);
+  const box=document.getElementById("sents"),ans=document.getElementById("ans"),help=document.getElementById("help");
+  const who=i=>`<span class="who${sp[1][i]==="Y"?" you":""}">${sp[1][i]==="Y"?"Você":esc(sp[0])}</span>`;
+  const lastO=()=>{for(let k=cur-1;k>=0;k--)if(sp[1][k]==="O")return x.s[k][0];return ""};
+  box.onclick=e=>{const b=e.target.closest(".say");if(b)speak(x.s[+b.dataset.i][0])};
+  document.getElementById("rep").onclick=()=>{const t=lastO();if(t)speak(t)};
+  document.getElementById("hint").onclick=()=>{if(cur<x.s.length){helped=true;help.textContent="Dica: "+x.s[cur][0].split(" ").map(w=>w[0]+"_".repeat(Math.max(0,w.replace(/[^A-Za-z']/g,"").length-1))).join(" ")}};
+  document.getElementById("show").onclick=()=>{if(cur<x.s.length){helped=true;help.textContent="Resposta: "+x.s[cur][0]}};
+  function advance(){
+    let spoke=[];
+    while(cur<x.s.length&&sp[1][cur]==="O"){spoke.push(x.s[cur][0]);cur++}
+    if(spoke.length){const go=k=>{if(k<spoke.length)speak(spoke[k],()=>go(k+1))};go(0)}
+    render();
+  }
+  function render(){
+    help.textContent="";ans.value="";ans.className="";
+    box.innerHTML=x.s.map(([en,pt],i)=>{
+      if(i<cur)return `<div class="sent">${who(i)}<div class="en donee">${esc(en)}<button class="say" data-i="${i}" aria-label="Ouvir">🔊</button></div><div class="pt">${esc(pt)}</div></div>`;
+      if(i===cur)return `<div class="sent cur">${who(i)}<div class="ask">Diga em inglês: “${esc(pt)}”</div></div>`;
+      return "";
+    }).join("");
+    const fin=cur>=x.s.length;
+    document.getElementById("typPanel").hidden=fin;
+    document.querySelector(".prog").classList.toggle("full",fin);
+    document.getElementById("pg").style.width=(cur/x.s.length*100)+"%";
+    if(fin){
+      if(!done[id+"R"]){gained=helped?10:20;pts+=gained}done[id+"R"]=true;persist();
+      const sib=all().filter(y=>y.lv===x.lv),nx=sib[sib.findIndex(y=>y.id===id)+1];
+      const min=Math.max(1,Math.round((Date.now()-t0)/60000));
+      box.insertAdjacentHTML("afterend",`<section class="finish" id="finish">
+        <h3>Conversa concluída! ✓</h3>
+        <div class="big">${gained?"+"+gained+" pontos":"Revisão feita"}</div>
+        <p>${helped?"Com ajuda":"Sem ajuda"} · ${min} min · Total: ${pts} pontos</p>
+        <div class="row">${nx?'<button class="btn" id="nextL">Próxima lição →</button>':""}<button class="btn ghost" id="again">Refazer</button><button class="btn ghost" id="home2">Voltar à lista</button></div>
+      </section>`);
+      document.getElementById("ptsPill").textContent="★ "+pts+" pts";
+      if(nx)document.getElementById("nextL").onclick=()=>lesson(nx.id);
+      document.getElementById("again").onclick=()=>lesson(id,"r");
+      document.getElementById("home2").onclick=goHome;
+      document.getElementById("finish").scrollIntoView({behavior:"smooth",block:"center"});
+    }else ans.focus();
+  }
+  ans.oninput=()=>{
+    const a=strip(ans.value),t=strip(x.s[cur][0]);
+    if(a===t){cur++;advance();return}
+    ans.className=!a?"":t.startsWith(a)?"okk":"bad";
+  };
+  ans.onkeydown=e=>{if(e.key==="Enter")e.preventDefault()};
+  advance();window.scrollTo(0,0);
 }
 if(history.state&&history.state.l)history.replaceState(null,"");
 window.addEventListener("popstate",()=>home());
