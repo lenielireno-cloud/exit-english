@@ -1,6 +1,10 @@
 // Traduz frases EN -> PT-BR pelo DeepL. A chave fica na variável DEEPL_KEY do Netlify.
+import { check } from "../lib/auth.mjs";
+
 export default async (req) => {
   if (req.method !== "POST") return new Response("Use POST", { status: 405 });
+  const c = await check(req);
+  if (c.error) return Response.json({ error: c.error }, { status: c.status });
   let texts;
   try { ({ texts } = await req.json()); } catch { return new Response("JSON inválido", { status: 400 }); }
   if (!Array.isArray(texts) || !texts.length || texts.length > 60 || texts.join("").length > 6000)
