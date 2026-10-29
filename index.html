@@ -74,6 +74,19 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 .modes .chip:disabled{opacity:.5;cursor:default}
 .ask{font:600 15px var(--body);color:var(--pt);background:color-mix(in srgb,var(--pt) 8%,transparent);border-radius:6px;padding:6px 10px}
 #ans.okk{border-color:var(--ok)} #ans.bad{border-color:var(--bad)}
+.w{background:none;border:none;padding:0;font:inherit;color:inherit;cursor:pointer;border-bottom:1px dotted var(--muted)}
+.w:focus-visible{outline:2px solid var(--sign)}
+.tip{position:fixed;z-index:20;background:var(--ink);color:var(--bg);border-radius:8px;padding:6px 10px;font:600 15px var(--body);max-width:70vw;box-shadow:0 4px 14px rgba(0,0,0,.25)}
+.top{display:flex;gap:10px;align-items:flex-start;justify-content:space-between}
+.resume{display:flex;gap:12px;align-items:center;width:100%;text-align:left;background:var(--surface);color:var(--ink);border:2px solid var(--sign);border-radius:10px;padding:12px 14px;cursor:pointer;font:inherit}
+.resume b{font:700 16px var(--display);display:block}
+.resume small{color:var(--muted)}
+.overlay{position:fixed;inset:0;z-index:30;background:rgba(0,0,0,.45);display:grid;place-items:center;padding:16px}
+.modal{background:var(--surface);color:var(--ink);border-radius:12px;max-width:560px;width:100%;max-height:85vh;overflow:auto;padding:18px;display:grid;gap:10px}
+.modal h2{font:800 22px var(--display);margin:0}
+.modal h3{font:700 16px var(--display);margin:6px 0 0}
+.modal p,.modal li{margin:0;line-height:1.5}
+.modal ul{margin:0;padding-left:20px;display:grid;gap:4px}
 .pill{font:700 13px var(--mono);background:var(--sign);color:var(--sign-ink);border-radius:999px;padding:4px 10px;white-space:nowrap;font-variant-numeric:tabular-nums}
 .finish{background:var(--sign);color:var(--sign-ink);outline:2px solid var(--sign-ink);outline-offset:-7px;border-radius:12px;padding:22px 18px;display:grid;gap:10px;text-align:center;animation:pop .45s ease-out}
 .finish h3{font:800 26px/1.1 var(--display);margin:0}
@@ -1539,7 +1552,8 @@ function home(){stopSpeak();
   const items=all().filter(x=>filter==="all"||x.lv===filter);
   const total=L.length,ok=L.filter((_,i)=>done["L"+i]).length;
   app.innerHTML=`
-  <header><h1>Exit <span>English</span></h1><p class="sub">Digite o texto em inglês e veja a tradução surgir abaixo. Trabalho e vida nos EUA.</p></header>
+  <header class="top"><div><h1>Exit <span>English</span></h1><p class="sub">A forma mais fácil de treinar seu inglês cotidiano.</p></div><button class="btn ghost" id="info" style="white-space:nowrap;flex-shrink:0">ℹ Ajuda</button></header>
+  ${resumeBtn()}
   <div class="bar">${[["all","Todas"],["b","Básico"],["i","Intermediário"],["a","Avançado"],["v","Vocabulário"],["t","Textos"],["m","Meus textos"]].map(([k,t])=>`<button class="chip" data-f="${k}" aria-pressed="${filter===k}">${t}</button>`).join("")}
   <span class="stat">${ok}/${total} concluídas</span><span class="pill">★ ${pts} pts</span></div>
   ${filter==="m"||filter==="all"?addPanel():""}
@@ -1551,6 +1565,8 @@ function home(){stopSpeak();
     </button>`).join("")||'<p class="msg">Nenhum texto ainda. Cole um texto acima para criar sua lição.</p>'}</div>`;
   app.querySelectorAll("[data-f]").forEach(b=>b.onclick=()=>{filter=b.dataset.f;home()});
   app.querySelectorAll("[data-id]").forEach(b=>b.onclick=()=>lesson(b.dataset.id));
+  document.getElementById("info").onclick=showInfo;
+  const rb=document.getElementById("resume");if(rb)rb.onclick=()=>{const l=load("ee_last",null);if(l)lesson(l.id,l.m)};
   const go=document.getElementById("addGo");
   if(go)go.onclick=addCustom;
 }
@@ -1579,7 +1595,8 @@ async function addCustom(){
 
 // ---------- lição ----------
 function lesson(id,mode){
-  const x=all().find(y=>y.id===id);
+  const x=all().find(y=>y.id===id);if(!x)return home();
+  save("ee_last",{id,m:mode==="r"?"r":"p"});
   const sp=x.id[0]==="L"?SPK[x.id.slice(1)]:null;
   const canR=!!(sp&&sp[1].includes("Y")&&sp[1].includes("O"));
   if(mode==="r"&&canR&&done[id])return respond(x,sp);let cur=Math.min(pos[id]||0,x.s.length);if(cur>=x.s.length)cur=0;const t0=Date.now();let gained=0;
@@ -1611,11 +1628,11 @@ function lesson(id,mode){
     playingAll=true;la.textContent="■ Parar";let k=0;
     const go=()=>{if(!playingAll||k>=x.s.length){playingAll=false;la.textContent="▶ Ouvir lição";return}speak(x.s[k++][0],go)};go();
   };
-  box.onclick=e=>{const b=e.target.closest(".say");if(b)speak(x.s[+b.dataset.i][0])};
+  box.onclick=e=>{if(wordTap(e))return;const b=e.target.closest(".say");if(b)speak(x.s[+b.dataset.i][0])};
   function render(){
     const t=norm(typ.value);
     box.innerHTML=x.s.map(([en,pt],i)=>{
-      if(i<cur)return `<div class="sent">${who(i)}<div class="en donee">${esc(en)}<button class="say" data-i="${i}" aria-label="Ouvir">🔊</button></div><div class="pt">${esc(pt)}</div></div>`;
+      if(i<cur)return `<div class="sent">${who(i)}<div class="en donee">${words(en)}<button class="say" data-i="${i}" aria-label="Ouvir">🔊</button></div><div class="pt">${esc(pt)}</div></div>`;
       if(i>cur)return "";
       const tg=norm(en);let html="",good=0,ok=true;
       for(let k=0;k<tg.length;k++){
@@ -1653,6 +1670,57 @@ function lesson(id,mode){
   typ.onkeydown=e=>{if(e.key==="Enter")e.preventDefault()};
   render();typ.focus();window.scrollTo(0,0);
 }
+function words(en){return en.split(/(\s+)/).map(t=>{const w=t.replace(/^[^A-Za-z0-9']+|[^A-Za-z0-9']+$/g,"");if(!w)return esc(t);const i=t.indexOf(w);return esc(t.slice(0,i))+`<button class="w" data-w="${esc(w)}">${esc(w)}</button>`+esc(t.slice(i+w.length))}).join("")}
+let wcache=load("ee_wcache",{}),tipEl=null;
+function closeTip(){if(tipEl){tipEl.remove();tipEl=null}}
+document.addEventListener("click",e=>{if(tipEl&&!e.target.closest(".w"))closeTip()});
+function wordTap(e){
+  const b=e.target.closest(".w");if(!b)return false;
+  const w=b.dataset.w,k=w.toLowerCase();speak(w);closeTip();
+  tipEl=document.createElement("div");tipEl.className="tip";document.body.appendChild(tipEl);
+  const r=b.getBoundingClientRect();
+  const place=()=>{if(!tipEl)return;const tw=tipEl.offsetWidth;tipEl.style.left=Math.max(8,Math.min(innerWidth-tw-8,r.left+r.width/2-tw/2))+"px";tipEl.style.top=(r.top>60?r.top-tipEl.offsetHeight-6:r.bottom+6)+"px"};
+  const show=t=>{if(tipEl){tipEl.textContent=w+" → "+t;place()}};
+  if(wcache[k]){show(wcache[k]);return true}
+  show("…");
+  fetch("/.netlify/functions/translate",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({texts:[w]})})
+    .then(r=>{if(!r.ok)throw 0;return r.json()}).then(d=>{const t=d.translations[0];wcache[k]=t;save("ee_wcache",wcache);show(t)})
+    .catch(()=>show(navigator.onLine?"tradução indisponível":"sem internet"));
+  return true;
+}
+function resumeBtn(){
+  const l=load("ee_last",null);if(!l)return "";
+  const x=all().find(y=>y.id===l.id);if(!x)return "";
+  const p=l.m==="r"?"modo Responder":pos[x.id]?`frase ${pos[x.id]+1} de ${x.s.length}`:"início";
+  return `<button class="resume" id="resume"><span style="font-size:22px">▶</span><span><b>Voltar aonde parou</b><small>Exit ${x.n} · ${esc(x.title)} · ${p}</small></span></button>`;
+}
+function showInfo(){
+  const o=document.createElement("div");o.className="overlay";
+  o.innerHTML=`<div class="modal" role="dialog" aria-label="Como usar">
+  <h2>Como usar o Exit English</h2>
+  <h3>1. Escolha uma lição</h3>
+  <p>Use os filtros para escolher o nível: Básico, Intermediário, Avançado, Vocabulário ou Textos.</p>
+  <h3>2. Praticar</h3>
+  <ul><li>Digite a frase destacada. Letra certa fica verde, errada fica vermelha.</li>
+  <li>A tradução aparece enquanto você digita. Ao acertar a frase, o app passa para a próxima.</li>
+  <li>Maiúsculas não contam.</li></ul>
+  <h3>3. Ouvir</h3>
+  <ul><li>🔊 Ouvir frase: fala a frase atual.</li>
+  <li>🔊 ao lado de uma frase pronta: ouve aquela frase de novo.</li>
+  <li>▶ Ouvir lição: lê a lição inteira. Velocidade: normal ou devagar.</li>
+  <li>Toque numa palavra de uma frase pronta para ouvir e ver a tradução dela.</li></ul>
+  <h3>4. Responder</h3>
+  <p>Nos diálogos, depois de concluir o Praticar, libera o modo Responder. O personagem fala e você responde de memória. Use 💡 Dica ou 👁 Ver resposta se travar.</p>
+  <h3>5. Pontos</h3>
+  <ul><li>Praticar: 10 pontos por lição.</li><li>Responder sem ajuda: 20 pontos. Com ajuda: 10.</li><li>Refazer não soma pontos de novo.</li></ul>
+  <h3>6. Meus textos</h3>
+  <p>Cole qualquer texto em inglês e o app traduz e cria uma lição para você. Precisa de internet.</p>
+  <h3>7. Voltar aonde parou</h3>
+  <p>O botão no topo abre a última lição em que você estava, na frase em que parou.</p>
+  <button class="btn" id="closeInfo">Entendi</button></div>`;
+  document.body.appendChild(o);
+  o.onclick=e=>{if(e.target===o||e.target.id==="closeInfo")o.remove()};
+}
 function modeBar(id,m){const ok=!!done[id];return `<div class="modes"><button class="chip" data-m="p" aria-pressed="${m==="p"}">Praticar</button><button class="chip" data-m="r" aria-pressed="${m==="r"}" ${ok?"":"disabled"}>${ok?"Responder":"🔒 Responder"}</button>${ok?"":'<span class="hint">Conclua o Praticar para liberar.</span>'}</div>`}
 function bindModes(id){app.querySelectorAll("[data-m]").forEach(b=>b.onclick=()=>{if(!b.disabled)lesson(id,b.dataset.m)})}
 const strip=s=>norm(s).toLowerCase().replace(/[^a-z0-9 ]/g,"").replace(/\s+/g," ").trim();
@@ -1677,7 +1745,7 @@ function respond(x,sp){
   const box=document.getElementById("sents"),ans=document.getElementById("ans"),help=document.getElementById("help");
   const who=i=>`<span class="who${sp[1][i]==="Y"?" you":""}">${sp[1][i]==="Y"?"Você":esc(sp[0])}</span>`;
   const lastO=()=>{for(let k=cur-1;k>=0;k--)if(sp[1][k]==="O")return x.s[k][0];return ""};
-  box.onclick=e=>{const b=e.target.closest(".say");if(b)speak(x.s[+b.dataset.i][0])};
+  box.onclick=e=>{if(wordTap(e))return;const b=e.target.closest(".say");if(b)speak(x.s[+b.dataset.i][0])};
   document.getElementById("rep").onclick=()=>{const t=lastO();if(t)speak(t)};
   document.getElementById("hint").onclick=()=>{if(cur<x.s.length){helped=true;help.textContent="Dica: "+x.s[cur][0].split(" ").map(w=>w[0]+"_".repeat(Math.max(0,w.replace(/[^A-Za-z']/g,"").length-1))).join(" ")}};
   document.getElementById("show").onclick=()=>{if(cur<x.s.length){helped=true;help.textContent="Resposta: "+x.s[cur][0]}};
@@ -1690,7 +1758,7 @@ function respond(x,sp){
   function render(){
     help.textContent="";ans.value="";ans.className="";
     box.innerHTML=x.s.map(([en,pt],i)=>{
-      if(i<cur)return `<div class="sent">${who(i)}<div class="en donee">${esc(en)}<button class="say" data-i="${i}" aria-label="Ouvir">🔊</button></div><div class="pt">${esc(pt)}</div></div>`;
+      if(i<cur)return `<div class="sent">${who(i)}<div class="en donee">${words(en)}<button class="say" data-i="${i}" aria-label="Ouvir">🔊</button></div><div class="pt">${esc(pt)}</div></div>`;
       if(i===cur)return `<div class="sent cur">${who(i)}<div class="ask">Diga em inglês: “${esc(pt)}”</div></div>`;
       return "";
     }).join("");
