@@ -472,9 +472,10 @@ function lesson(id,mode){
         <h3>Lição concluída! ✓</h3>${canR&&!done[id+"R"]?"<p>Modo Responder liberado!</p>":""}
         <div class="big">${gained?"+"+gained+" pontos":"Revisão feita"}</div>
         <p>${x.s.length} frases · ${min} min · Total: ${pts} pontos</p>
-        <div class="row">${nx?'<button class="btn" id="nextL">Próxima lição →</button>':""}${canR?'<button class="btn ghost" id="toR">Modo Responder</button>':""}<button class="btn ghost" id="again">Refazer</button><button class="btn ghost" id="home2">Voltar à lista</button></div>
+        <div class="row"><button class="btn" id="laF">▶ Ouvir conversa inteira</button>${nx?'<button class="btn" id="nextL">Próxima lição →</button>':""}${canR?'<button class="btn ghost" id="toR">Modo Responder</button>':""}<button class="btn ghost" id="again">Refazer</button><button class="btn ghost" id="home2">Voltar à lista</button></div>
       </section>`);
       document.getElementById("ptsPill").textContent="★ "+pts+" pts";
+      document.getElementById("laF").onclick=e=>playAll(x,e.currentTarget);
       if(nx)document.getElementById("nextL").onclick=()=>lesson(nx.id);
       if(canR)document.getElementById("toR").onclick=()=>lesson(id,"r");
       document.getElementById("finish").scrollIntoView({behavior:"smooth",block:"center"});
@@ -541,6 +542,13 @@ function showInfo(){
   document.body.appendChild(o);
   o.onclick=e=>{if(e.target===o||e.target.id==="closeInfo")o.remove()};
 }
+let playTok=0;
+function playAll(x,btn){
+  const lbl="▶ Ouvir conversa inteira";
+  if(btn.dataset.on){playTok++;stopSpeak();btn.dataset.on="";btn.textContent=lbl;return}
+  const tok=++playTok;btn.dataset.on="1";btn.textContent="■ Parar";let k=0;
+  const go=()=>{if(tok!==playTok)return;if(k>=x.s.length){btn.dataset.on="";btn.textContent=lbl;return}speak(x.s[k++][0],go)};go();
+}
 function modeBar(id,m){const ok=!!done[id];return `<div class="modes"><button class="chip" data-m="p" aria-pressed="${m==="p"}">Praticar</button><button class="chip" data-m="r" aria-pressed="${m==="r"}" ${ok?"":"disabled"}>${ok?"Responder":"🔒 Responder"}</button>${ok?"":'<span class="hint">Conclua o Praticar para liberar.</span>'}</div>`}
 function bindModes(id){app.querySelectorAll("[data-m]").forEach(b=>b.onclick=()=>{if(!b.disabled)lesson(id,b.dataset.m)})}
 const strip=s=>norm(s).toLowerCase().replace(/[^a-z0-9 ]/g,"").replace(/\s+/g," ").trim();
@@ -594,9 +602,10 @@ function respond(x,sp){
         <h3>Conversa concluída! ✓</h3>
         <div class="big">${gained?"+"+gained+" pontos":"Revisão feita"}</div>
         <p>${helped?"Com ajuda":"Sem ajuda"} · ${min} min · Total: ${pts} pontos</p>
-        <div class="row">${nx?'<button class="btn" id="nextL">Próxima lição →</button>':""}<button class="btn ghost" id="again">Refazer</button><button class="btn ghost" id="home2">Voltar à lista</button></div>
+        <div class="row"><button class="btn" id="laF">▶ Ouvir conversa inteira</button>${nx?'<button class="btn" id="nextL">Próxima lição →</button>':""}<button class="btn ghost" id="again">Refazer</button><button class="btn ghost" id="home2">Voltar à lista</button></div>
       </section>`);
       document.getElementById("ptsPill").textContent="★ "+pts+" pts";
+      document.getElementById("laF").onclick=e=>playAll(x,e.currentTarget);
       if(nx)document.getElementById("nextL").onclick=()=>lesson(nx.id);
       document.getElementById("again").onclick=()=>lesson(id,"r");
       document.getElementById("home2").onclick=goHome;
