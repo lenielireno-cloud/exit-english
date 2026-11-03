@@ -121,6 +121,16 @@ select.chip{font:600 14px var(--body)}
 .sign b{display:block;font:900 clamp(30px,8vw,40px)/1 "Overpass",system-ui,sans-serif;letter-spacing:.01em}
 .sign .arr{font:900 38px/1 "Overpass",system-ui,sans-serif;flex-shrink:0}
 .signwrap{display:grid;gap:6px}
+.exit .t small.bk{display:block;font:700 11px var(--mono);letter-spacing:.06em;text-transform:uppercase;opacity:.8}
+.exit.lock{opacity:.55;filter:grayscale(.6)}
+.sq{background:color-mix(in srgb,var(--sign-ink) 12%,transparent);border-radius:10px;padding:12px;display:grid;gap:8px;text-align:left}
+.sqt{font:700 16px var(--body);margin:0}
+.sqo{display:grid;gap:6px}
+.sqo .btn{text-align:left;white-space:normal}
+.finish .sqo .btn.ghost{color:var(--sign-ink);border-color:var(--sign-ink)}
+.finish .sqo .btn.qok{background:var(--sign-ink);color:var(--sign);opacity:1}
+.finish .sqo .btn.qbad{text-decoration:line-through;opacity:.7}
+.sqw{margin:0;font-size:15px}
 .pill{font:700 13px var(--mono);background:var(--sign);color:var(--sign-ink);border-radius:999px;padding:4px 10px;white-space:nowrap;font-variant-numeric:tabular-nums}
 .finish{background:var(--sign);color:var(--sign-ink);outline:2px solid var(--sign-ink);outline-offset:-7px;border-radius:12px;padding:22px 18px;display:grid;gap:10px;text-align:center;animation:pop .45s ease-out}
 .finish h3{font:800 26px/1.1 var(--display);margin:0}
@@ -288,7 +298,7 @@ async function adminScreen(){
   catch(e){console.error("admin",e);alertMsg("Não foi possível carregar os alunos. Verifique a internet.")}
 }
 let SPK={};
-const LV={b:"Básico",i:"Intermediário",a:"Avançado",v:"Vocabulário",t:"Textos"};
+const LV={b:"Básico",i:"Intermediário",a:"Avançado",v:"Vocabulário",t:"Textos",h:"Histórias"};
 
 // ---------- estado local ----------
 function load(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}}
@@ -337,7 +347,7 @@ const esc=s=>s.replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&qu
 const norm=s=>s.replace(/[’‘]/g,"'").replace(/[“”]/g,'"').replace(/\s+/g," ");
 
 
-function all(){return L.map((l,i)=>({id:"L"+i,n:i+1,title:l[0],lv:l[1],s:l[2]}))
+function all(){return L.map((l,i)=>({id:"L"+i,n:i+1,title:l[0],lv:l[1],s:l[2],book:l[3]&&l[3].book,q:l[3]&&l[3].q}))
   .concat(custom.map((c,i)=>({id:"C"+i,n:"M"+(i+1),title:c.title,lv:"m",s:c.s})))}
 
 // ---------- lista ----------
@@ -360,17 +370,17 @@ function home(){stopSpeak();
   <header class="top"><div class="signwrap"><div class="sign" role="img" aria-label="Next Exit: English"><span class="tab">EXIT</span><div class="in"><div class="tx2"><small>Next Exit</small><b>English</b></div><span class="arr">↗</span></div></div><p class="sub">A forma mais fácil de treinar seu inglês cotidiano.</p></div><div class="hbtns">${isAdmin?'<button class="btn" id="admin">Alunos</button>':""}<button class="btn ghost" id="info" style="white-space:nowrap">ℹ Ajuda</button><button class="btn ghost" id="out">Sair</button></div></header>
   ${!isAdmin&&expira?`<p class="hint">Acesso liberado até ${fmtD(expira)}</p>`:""}
   ${resumeBtn()}
-  <div class="bar">${[["all","Todas"],["b","Básico"],["i","Intermediário"],["a","Avançado"],["v","Vocabulário"],["t","Textos"],["m","Meus textos"]].map(([k,t])=>`<button class="chip" data-f="${k}" aria-pressed="${filter===k}">${t}</button>`).join("")}
+  <div class="bar">${[["all","Todas"],["b","Básico"],["i","Intermediário"],["a","Avançado"],["v","Vocabulário"],["t","Textos"],["h","📖 Histórias"],["m","Meus textos"]].map(([k,t])=>`<button class="chip" data-f="${k}" aria-pressed="${filter===k}">${t}</button>`).join("")}
   <span class="stat">${ok}/${total} concluídas</span><span class="pill">★ ${pts} pts</span></div>
   ${filter==="m"||filter==="all"?addPanel():""}
   <div class="list">${items.map(x=>`
-    <button class="exit" data-id="${x.id}">
-      <span class="num">Exit<b>${x.n}</b></span>
-      <span class="t"><strong>${esc(x.title)}</strong><small>${x.lv==="m"?"Meu texto":LV[x.lv]} · ${x.s.length} frases${pos[x.id]?` · parou na frase ${pos[x.id]+1}`:""}</small></span>
+    <button class="exit${locked(x)?" lock":""}" data-id="${x.id}" ${locked(x)?'aria-disabled="true"':""}>
+      <span class="num">${x.lv==="h"?"📖":"Exit"}<b>${x.lv==="h"?x.title.match(/Cap\. (\d+)/)[1]:x.n}</b></span>
+      <span class="t">${x.book?`<small class="bk">${esc(x.book)}</small>`:""}<strong>${esc(x.lv==="h"?x.title.replace(/^Cap\. \d+ · /,""):x.title)}</strong><small>${locked(x)?"🔒 Conclua o capítulo anterior":(x.lv==="m"?"Meu texto":LV[x.lv])+" · "+x.s.length+" frases"}${pos[x.id]?` · parou na frase ${pos[x.id]+1}`:""}</small></span>
       ${done[x.id+"R"]?'<span class="done">FEITA ★</span>':done[x.id]?'<span class="done">FEITA</span>':""}
     </button>`).join("")||'<p class="msg">Nenhum texto ainda. Cole um texto acima para criar sua lição.</p>'}</div>`;
   app.querySelectorAll("[data-f]").forEach(b=>b.onclick=()=>{filter=b.dataset.f;home()});
-  app.querySelectorAll("[data-id]").forEach(b=>b.onclick=()=>lesson(b.dataset.id));
+  app.querySelectorAll("[data-id]").forEach(b=>b.onclick=()=>{if(b.getAttribute("aria-disabled")){b.animate&&b.animate([{transform:"translateX(-4px)"},{transform:"translateX(4px)"},{transform:"none"}],{duration:200});return}lesson(b.dataset.id)});
   document.getElementById("info").onclick=showInfo;
   document.getElementById("out").onclick=logout;
   if(isAdmin)document.getElementById("admin").onclick=adminScreen;
@@ -406,7 +416,7 @@ async function addCustom(){
 
 // ---------- lição ----------
 function lesson(id,mode){
-  const x=all().find(y=>y.id===id);if(!x)return home();
+  const x=all().find(y=>y.id===id);if(!x||locked(x))return home();
   save("ee_last",{id,m:mode==="r"?"r":""});
   const sp=x.id[0]==="L"?SPK[x.id.slice(1)]:null;
   const canR=!!(sp&&sp[1].includes("Y")&&sp[1].includes("O"));
@@ -468,14 +478,17 @@ function lesson(id,mode){
     if(fin&&!review){
       const sib=all().filter(y=>y.lv===x.lv),nx=sib[sib.findIndex(y=>y.id===id)+1];
       const min=Math.max(1,Math.round((Date.now()-t0)/60000));
+      {const f0=document.getElementById("finish");if(f0)f0.remove();}
       box.insertAdjacentHTML("afterend",`<section class="finish" id="finish">
-        <h3>Lição concluída! ✓</h3>${canR&&!done[id+"R"]?"<p>Modo Responder liberado!</p>":""}
+        <h3>${x.lv==="h"?(nx&&nx.book===x.book?"Capítulo concluído! ✓":"Livro concluído! 📖"):"Lição concluída! ✓"}</h3>${canR&&!done[id+"R"]?"<p>Modo Responder liberado!</p>":""}
         <div class="big">${gained?"+"+gained+" pontos":"Revisão feita"}</div>
-        <p>${x.s.length} frases · ${min} min · Total: ${pts} pontos</p>
-        <div class="row"><button class="btn" id="laF">▶ Ouvir conversa inteira</button>${nx?'<button class="btn" id="nextL">Próxima lição →</button>':""}${canR?'<button class="btn ghost" id="toR">Modo Responder</button>':""}<button class="btn ghost" id="again">Refazer</button><button class="btn ghost" id="home2">Voltar à lista</button></div>
+        <p>${x.s.length} frases · ${min} min · Total: <span id="ptsT">${pts}</span> pontos</p>
+        ${storyQ(x,id)}
+        <div class="row"><button class="btn" id="laF">${x.lv==="h"?"▶ Ouvir capítulo inteiro":"▶ Ouvir conversa inteira"}</button>${nx?`<button class="btn" id="nextL">${x.lv==="h"&&nx.book===x.book?"Próximo capítulo →":"Próxima lição →"}</button>`:""}${canR?'<button class="btn ghost" id="toR">Modo Responder</button>':""}<button class="btn ghost" id="again">Refazer</button><button class="btn ghost" id="home2">Voltar à lista</button></div>
       </section>`);
       document.getElementById("ptsPill").textContent="★ "+pts+" pts";
       document.getElementById("laF").onclick=e=>playAll(x,e.currentTarget);
+      bindQ(x,id,()=>{document.getElementById("ptsT").textContent=pts;document.getElementById("ptsPill").textContent="★ "+pts+" pts"});
       if(nx)document.getElementById("nextL").onclick=()=>lesson(nx.id);
       if(canR)document.getElementById("toR").onclick=()=>lesson(id,"r");
       document.getElementById("finish").scrollIntoView({behavior:"smooth",block:"center"});
@@ -532,6 +545,8 @@ function showInfo(){
   <p>Nos diálogos, depois de concluir o Praticar, libera o modo Responder. O personagem fala e você responde de memória. Use 💡 Dica ou 👁 Ver resposta se travar.</p>
   <h3>5. Pontos</h3>
   <ul><li>Praticar: 10 pontos por lição.</li><li>Responder sem ajuda: 20 pontos. Com ajuda: 10.</li><li>Refazer não soma pontos de novo.</li></ul>
+  <h3>📖 Histórias</h3>
+  <p>Livros clássicos adaptados, em capítulos. Ao terminar um capítulo, responda à pergunta (+5 pontos) e libere o próximo.</p>
   <h3>6. Meus textos</h3>
   <p>Cole qualquer texto em inglês e o app traduz e cria uma lição para você. Precisa de internet.</p>
   <h3>7. Voltar aonde parou</h3>
@@ -544,10 +559,25 @@ function showInfo(){
 }
 let playTok=0;
 function playAll(x,btn){
-  const lbl="▶ Ouvir conversa inteira";
+  const lbl=btn.dataset.lbl||(btn.dataset.lbl=btn.textContent);
   if(btn.dataset.on){playTok++;stopSpeak();btn.dataset.on="";btn.textContent=lbl;return}
   const tok=++playTok;btn.dataset.on="1";btn.textContent="■ Parar";let k=0;
   const go=()=>{if(tok!==playTok)return;if(k>=x.s.length){btn.dataset.on="";btn.textContent=lbl;return}speak(x.s[k++][0],go)};go();
+}
+function prevCh(x){if(x.lv!=="h")return null;const a=all(),i=a.findIndex(y=>y.id===x.id);const p=a[i-1];return p&&p.book===x.book?p:null}
+function locked(x){const p=prevCh(x);return !!(p&&!done[p.id])}
+function storyQ(x,id){
+  const q=x.q;if(!q)return "";const ans=done[id+"Q"];
+  return `<div class="sq" id="sq"><p class="sqt">🤔 ${esc(q.t)}</p><div class="sqo">${q.o.map((o,i)=>`<button class="btn ghost" data-qa="${i}" ${ans!=null?"disabled":""}>${esc(o)}</button>`).join("")}</div><p class="sqw" id="sqw" ${ans!=null?"":"hidden"}>${ans!=null?(ans===true?"✓ Acertou! ":"✗ ")+esc(q.w):""}</p></div>`;
+}
+function bindQ(x,id,onPts){
+  const box=document.getElementById("sq");if(!box)return;
+  box.querySelectorAll("[data-qa]").forEach(b=>b.onclick=()=>{
+    const i=+b.dataset.qa,ok=i===x.q.c;
+    box.querySelectorAll("[data-qa]").forEach(z=>{z.disabled=true;if(+z.dataset.qa===x.q.c)z.classList.add("qok");else if(z===b)z.classList.add("qbad")});
+    const w=document.getElementById("sqw");w.hidden=false;w.textContent=(ok?"✓ Acertou! +5 pontos. ":"✗ Não foi dessa vez. ")+x.q.w;
+    if(done[id+"Q"]==null){done[id+"Q"]=ok;if(ok){pts+=5;onPts&&onPts()}persist()}
+  });
 }
 function modeBar(id,m){const ok=!!done[id];return `<div class="modes"><button class="chip" data-m="p" aria-pressed="${m==="p"}">Praticar</button><button class="chip" data-m="r" aria-pressed="${m==="r"}" ${ok?"":"disabled"}>${ok?"Responder":"🔒 Responder"}</button>${ok?"":'<span class="hint">Conclua o Praticar para liberar.</span>'}</div>`}
 function bindModes(id){app.querySelectorAll("[data-m]").forEach(b=>b.onclick=()=>{if(!b.disabled)lesson(id,b.dataset.m)})}
