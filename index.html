@@ -7,8 +7,8 @@
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icon-192.png">
 <link rel="apple-touch-icon" href="icon-192.png">
-<title>Exit English</title>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<title>Next Exit: English</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Overpass:wght@600;800;900&family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
 <style>
 /* Layout: lista de "saídas" estilo placa de rodovia americana -> tela de digitação com tradução revelada abaixo */
 :root{
@@ -81,7 +81,7 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 .w{background:none;border:none;padding:0;font:inherit;color:inherit;cursor:pointer;border-bottom:1px dotted var(--muted)}
 .w:focus-visible{outline:2px solid var(--sign)}
 .tip{position:fixed;z-index:20;background:var(--ink);color:var(--bg);border-radius:8px;padding:6px 10px;font:600 15px var(--body);max-width:70vw;box-shadow:0 4px 14px rgba(0,0,0,.25)}
-.top{display:flex;gap:10px;align-items:flex-start;justify-content:space-between}
+.top{display:flex;gap:10px;align-items:flex-start;justify-content:space-between;flex-wrap:wrap}
 .resume{display:flex;gap:12px;align-items:center;width:100%;text-align:left;background:var(--surface);color:var(--ink);border:2px solid var(--sign);border-radius:10px;padding:12px 14px;cursor:pointer;font:inherit}
 .resume b{font:700 16px var(--display);display:block}
 .resume small{color:var(--muted)}
@@ -113,6 +113,14 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 .mini{height:4px;background:var(--line);border-radius:2px;overflow:hidden;margin-top:4px}
 .mini i{display:block;height:100%;background:var(--sign)}
 select.chip{font:600 14px var(--body)}
+.sign{position:relative;background:var(--sign);color:#fff;border-radius:10px;padding:6px;box-shadow:0 2px 0 rgba(0,0,0,.15);margin-top:16px;max-width:360px}
+.sign .in{border:2.5px solid #fff;border-radius:6px;padding:10px 14px 12px;display:flex;align-items:center;gap:12px}
+.sign .tab{position:absolute;top:-16px;left:14px;background:var(--sign);border:2.5px solid #fff;border-bottom:none;border-radius:6px 6px 0 0;padding:2px 10px 1px;font:900 12px "Overpass",system-ui,sans-serif;letter-spacing:.12em}
+.sign .tx2{flex:1;min-width:0}
+.sign small{display:block;font:800 13px "Overpass",system-ui,sans-serif;letter-spacing:.14em;text-transform:uppercase;opacity:.92}
+.sign b{display:block;font:900 clamp(30px,8vw,40px)/1 "Overpass",system-ui,sans-serif;letter-spacing:.01em}
+.sign .arr{font:900 38px/1 "Overpass",system-ui,sans-serif;flex-shrink:0}
+.signwrap{display:grid;gap:6px}
 .pill{font:700 13px var(--mono);background:var(--sign);color:var(--sign-ink);border-radius:999px;padding:4px 10px;white-space:nowrap;font-variant-numeric:tabular-nums}
 .finish{background:var(--sign);color:var(--sign-ink);outline:2px solid var(--sign-ink);outline-offset:-7px;border-radius:12px;padding:22px 18px;display:grid;gap:10px;text-align:center;animation:pop .45s ease-out}
 .finish h3{font:800 26px/1.1 var(--display);margin:0}
@@ -178,14 +186,14 @@ async function boot(){
   if(r&&r.status===402){const d=await r.json().catch(()=>({}));try{localStorage.removeItem("ee_lic")}catch(e){}return payScreen(d.expira_em)}
   const c=load("ee_lic",null);
   if(c&&(c.admin||(c.expira&&new Date(c.expira)>new Date()))){L=c.L;SPK=c.SPK;isAdmin=c.admin;expira=c.expira;return home()}
-  app.innerHTML=`<div class="auth"><header><h1>Exit <span>English</span></h1></header><section class="panel"><h2>Sem conexão</h2><p class="msg">Conecte-se à internet para carregar as lições pela primeira vez.</p><button class="btn" id="retry">Tentar de novo</button></section></div>`;
+  app.innerHTML=`<div class="auth"><header class="signwrap"><div class="sign" role="img" aria-label="Next Exit: English"><span class="tab">EXIT</span><div class="in"><div class="tx2"><small>Next Exit</small><b>English</b></div><span class="arr">↗</span></div></div></header><section class="panel"><h2>Sem conexão</h2><p class="msg">Conecte-se à internet para carregar as lições pela primeira vez.</p><button class="btn" id="retry">Tentar de novo</button></section></div>`;
   document.getElementById("retry").onclick=boot;
 }
 function loginScreen(msg){
   let mode="in";
   const draw=()=>{
     app.innerHTML=`<div class="auth">
-    <header><h1>Exit <span>English</span></h1><p class="sub">A forma mais fácil de treinar seu inglês cotidiano.</p></header>
+    <header class="signwrap"><div class="sign" role="img" aria-label="Next Exit: English"><span class="tab">EXIT</span><div class="in"><div class="tx2"><small>Next Exit</small><b>English</b></div><span class="arr">↗</span></div></div><p class="sub">A forma mais fácil de treinar seu inglês cotidiano.</p></header>
     <section class="panel">
       <div class="tabs"><button class="chip" data-t="in" aria-pressed="${mode==="in"}">Entrar</button><button class="chip" data-t="up" aria-pressed="${mode==="up"}">Criar conta</button></div>
       <form id="af" class="adm">
@@ -221,7 +229,7 @@ function loginScreen(msg){
 function payScreen(exp){
   const venc=exp&&new Date(exp)<new Date();
   app.innerHTML=`<div class="auth">
-  <header class="top"><div><h1>Exit <span>English</span></h1><p class="sub">Olá${sess&&sess.nome?", "+esc(sess.nome):""}!</p></div><button class="btn ghost" id="out">Sair</button></header>
+  <header class="top"><div class="signwrap"><div class="sign" role="img" aria-label="Next Exit: English"><span class="tab">EXIT</span><div class="in"><div class="tx2"><small>Next Exit</small><b>English</b></div><span class="arr">↗</span></div></div><p class="sub">Olá${sess&&sess.nome?", "+esc(sess.nome):""}!</p></div><button class="btn ghost" id="out">Sair</button></header>
   <section class="panel">
     <h2>${venc?"Seu acesso venceu em "+fmtD(exp):"Libere seu acesso"}</h2>
     <span class="tag">Valor simbólico para os primeiros 300 alunos</span>
@@ -320,7 +328,8 @@ async function syncDown(){
 }
 function ownLocal(){
   const who=sess&&sess.email;if(!who)return;
-  if(load("ee_owner",null)!==who){done={};pos={};pts=0;custom=[];["ee_done","ee_pos","ee_pts","ee_custom","ee_last","ee_dirty"].forEach(k=>{try{localStorage.removeItem(k)}catch(e){}});save("ee_owner",who)}
+  const own=load("ee_owner",null);if(!own){save("ee_owner",who);return}
+  if(own!==who){done={};pos={};pts=0;custom=[];["ee_done","ee_pos","ee_pts","ee_custom","ee_last","ee_dirty"].forEach(k=>{try{localStorage.removeItem(k)}catch(e){}});save("ee_owner",who)}
 }
 let filter="all";
 const app=document.getElementById("app");
@@ -348,7 +357,7 @@ function home(){stopSpeak();
   const items=all().filter(x=>filter==="all"||x.lv===filter);
   const total=L.length,ok=L.filter((_,i)=>done["L"+i]).length;
   app.innerHTML=`
-  <header class="top"><div><h1>Exit <span>English</span></h1><p class="sub">A forma mais fácil de treinar seu inglês cotidiano.</p></div><div class="hbtns">${isAdmin?'<button class="btn" id="admin">Alunos</button>':""}<button class="btn ghost" id="info" style="white-space:nowrap">ℹ Ajuda</button><button class="btn ghost" id="out">Sair</button></div></header>
+  <header class="top"><div class="signwrap"><div class="sign" role="img" aria-label="Next Exit: English"><span class="tab">EXIT</span><div class="in"><div class="tx2"><small>Next Exit</small><b>English</b></div><span class="arr">↗</span></div></div><p class="sub">A forma mais fácil de treinar seu inglês cotidiano.</p></div><div class="hbtns">${isAdmin?'<button class="btn" id="admin">Alunos</button>':""}<button class="btn ghost" id="info" style="white-space:nowrap">ℹ Ajuda</button><button class="btn ghost" id="out">Sair</button></div></header>
   ${!isAdmin&&expira?`<p class="hint">Acesso liberado até ${fmtD(expira)}</p>`:""}
   ${resumeBtn()}
   <div class="bar">${[["all","Todas"],["b","Básico"],["i","Intermediário"],["a","Avançado"],["v","Vocabulário"],["t","Textos"],["m","Meus textos"]].map(([k,t])=>`<button class="chip" data-f="${k}" aria-pressed="${filter===k}">${t}</button>`).join("")}
@@ -506,7 +515,7 @@ function resumeBtn(){
 function showInfo(){
   const o=document.createElement("div");o.className="overlay";
   o.innerHTML=`<div class="modal" role="dialog" aria-label="Como usar">
-  <h2>Como usar o Exit English</h2>
+  <h2>Como usar o Next Exit: English</h2>
   <h3>1. Escolha uma lição</h3>
   <p>Use os filtros para escolher o nível: Básico, Intermediário, Avançado, Vocabulário ou Textos.</p>
   <h3>2. Praticar</h3>
