@@ -10,13 +10,14 @@ export async function check(req) {
   if (!u.ok) return { error: "login", status: 401 };
   const user = await u.json();
   const [ra, rb] = await Promise.all([
-    fetch(`${SB}/rest/v1/alunos?select=expira_em&id=eq.${user.id}`, { headers: h }),
+    fetch(`${SB}/rest/v1/alunos?select=expira_em,plano&id=eq.${user.id}`, { headers: h }),
     fetch(`${SB}/rest/v1/rpc/is_admin`, { method: "POST", headers: { ...h, "Content-Type": "application/json" }, body: "{}" }),
   ]);
   const rows = ra.ok ? await ra.json() : [];
   const admin = rb.ok ? (await rb.json()) === true : false;
   const expira_em = rows[0]?.expira_em || null;
+  const plano = rows[0]?.plano || "adulto";
   if (!admin && !(expira_em && new Date(expira_em) > new Date()))
-    return { error: "pagamento", status: 402, expira_em };
-  return { admin, expira_em, user };
+    return { error: "pagamento", status: 402, expira_em, plano };
+  return { admin, expira_em, user, plano };
 }
