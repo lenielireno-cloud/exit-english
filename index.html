@@ -108,6 +108,7 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 .st{font:700 12px var(--mono);border-radius:4px;padding:3px 7px;white-space:nowrap}
 .st.on{background:color-mix(in srgb,var(--ok) 18%,transparent);color:var(--ok)}
 .st.wait{background:color-mix(in srgb,var(--pt) 15%,transparent);color:var(--pt)}
+.st.req{background:color-mix(in srgb,#E8590C 18%,transparent);color:#C2410C}
 .st.off{background:color-mix(in srgb,var(--bad) 15%,transparent);color:var(--bad)}
 .arow small.pline{display:block;color:var(--ink);margin-top:4px}
 .mini{height:4px;background:var(--line);border-radius:2px;overflow:hidden;margin-top:4px}
@@ -131,6 +132,68 @@ select.chip{font:600 14px var(--body)}
 .finish .sqo .btn.qok{background:var(--sign-ink);color:var(--sign);opacity:1}
 .finish .sqo .btn.qbad{text-decoration:line-through;opacity:.7}
 .sqw{margin:0;font-size:15px}
+body.kids{--sign:#E8590C}
+body.kids .en{font-size:22px}
+body.kids .pt{font-size:19px}
+body.kids #typ{font-size:21px}
+body.kids .exit{border-radius:18px}
+.kem{font-size:26px;line-height:1;flex-shrink:0;padding-top:2px}
+.kemb{font-size:56px;line-height:1.1;text-align:center}
+.ind h2{font-size:17px}
+.knum{font-size:30px!important;line-height:1}
+.alb{display:grid;grid-template-columns:repeat(auto-fill,minmax(88px,1fr));gap:8px}
+.stk{display:grid;justify-items:center;gap:4px;padding:10px 6px;border:2px dashed var(--line);border-radius:12px;text-align:center}
+.stk span{font-size:34px}
+.stk small{font-size:11px;color:var(--muted)}
+.stk.off span{filter:grayscale(1);opacity:.4}
+.kst{letter-spacing:4px}
+.ksticker span{font-size:30px;vertical-align:middle}
+.ii{display:inline-grid;place-items:center;width:18px;height:18px;margin-left:5px;border-radius:50%;font:700 12px/1 var(--body);background:color-mix(in srgb,var(--pt) 16%,transparent);color:var(--pt);cursor:pointer;vertical-align:middle}
+.chip[aria-pressed="true"] .ii{background:color-mix(in srgb,var(--bg) 30%,transparent);color:var(--bg)}
+.tip.info{max-width:min(300px,86vw);font:500 14px/1.45 var(--body)}
+.lesson-head h2{flex:1 1 150px}
+.tmr{position:relative;font:700 12px var(--mono);padding:4px 8px;border-radius:999px;background:conic-gradient(var(--sign) calc(var(--p,0)*360deg),var(--line) 0);color:var(--ink);white-space:nowrap;font-variant-numeric:tabular-nums}
+.tmr b{font:inherit}
+.tmr::before{content:"";position:absolute;inset:2px;border-radius:999px;background:var(--surface);z-index:0}
+.tmr>*,.tmr{isolation:isolate}
+.tmr b,.tmr{z-index:1}
+.tmr.paused{opacity:.55}
+.tmr.done{background:var(--sign);color:var(--sign-ink)}
+.tmr.done::before{display:none}
+.prof{gap:8px}
+.profrow{display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+.gem{font-size:18px}.gem b{font:800 20px var(--display)}.gem small{color:var(--muted);font-size:13px}
+.week{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
+.wd{display:grid;place-items:center;height:34px;border-radius:8px;border:1px solid var(--line);font:700 12px var(--mono);color:var(--muted)}
+.wd.ok{background:color-mix(in srgb,var(--sign) 14%,transparent);border-color:var(--sign);font-size:16px}
+.wd.now{outline:2px solid var(--sign);outline-offset:1px}
+.todayb{display:grid;gap:4px;font-size:14px;color:var(--muted)}
+.price.strike{position:relative;display:inline-block;color:var(--muted);width:max-content}
+.price .xx{position:absolute;inset:-4px -8px;pointer-events:none;font-size:0;background:linear-gradient(to top right,transparent calc(50% - 2.5px),#E03131 calc(50% - 2.5px),#E03131 calc(50% + 2.5px),transparent calc(50% + 2.5px)),linear-gradient(to bottom right,transparent calc(50% - 2.5px),#E03131 calc(50% - 2.5px),#E03131 calc(50% + 2.5px),transparent calc(50% + 2.5px))}
+.free{font:800 26px var(--display);color:var(--ok)}
+.nbadge{position:absolute;top:-7px;right:-7px;min-width:20px;height:20px;padding:0 5px;border-radius:999px;background:#E03131;color:#fff;font:800 12px/20px var(--body);text-align:center}
+.inst{border:2px solid var(--sign)}
+.inst h2{font-size:17px}
+#splash{position:fixed;inset:0;z-index:100;background:#0A3161;display:grid;place-items:center;transition:opacity .45s ease}
+#splash svg{position:absolute;inset:0;width:100%;height:100%}
+#splash .sp-in{position:relative;padding:0 24px;width:min(360px,86vw);animation:spIn .7s cubic-bezier(.2,.8,.2,1.2) both}
+#splash .sign{margin:0;max-width:none;box-shadow:0 10px 30px rgba(0,0,0,.45)}
+#splash.out{opacity:0}
+@keyframes spIn{from{transform:scale(.6) translateY(20px);opacity:0}to{transform:none;opacity:1}}
+@media (prefers-reduced-motion:reduce){#splash .sp-in{animation:none}}
+.menub{position:relative;font-size:26px;line-height:1;width:48px;height:48px;border-radius:12px;border:1px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer;flex-shrink:0;align-self:flex-start;margin-top:16px}
+.top{flex-wrap:nowrap}
+.top .signwrap{min-width:0;flex:1}
+.statline{justify-self:start;border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:999px;padding:7px 14px;font:700 14px var(--mono);font-variant-numeric:tabular-nums;cursor:pointer}
+.drawer-bg{position:fixed;inset:0;z-index:40;background:rgba(0,0,0,0);transition:background .2s}
+.drawer-bg.on{background:rgba(0,0,0,.45)}
+.drawer{position:absolute;top:0;right:0;bottom:0;width:min(300px,84vw);background:var(--surface);color:var(--ink);padding:calc(16px + env(safe-area-inset-top,0px)) max(16px,env(safe-area-inset-right,0px)) 16px 16px;display:grid;align-content:start;gap:6px;transform:translateX(100%);transition:transform .2s ease;box-shadow:-8px 0 24px rgba(0,0,0,.2);overflow:auto}
+.drawer-bg.on .drawer{transform:none}
+.mi{display:flex;align-items:center;gap:12px;width:100%;text-align:left;background:none;border:none;border-radius:10px;padding:12px 10px;font:600 16px var(--body);color:var(--ink);cursor:pointer}
+.mi:hover,.mi:focus-visible{background:color-mix(in srgb,var(--sign) 10%,transparent)}
+.mi span:first-child{width:26px;text-align:center;font-size:20px}
+.nbadge.in{position:static;margin-left:auto}
+@media (prefers-reduced-motion:reduce){.drawer,.drawer-bg{transition:none}}
 .pill{font:700 13px var(--mono);background:var(--sign);color:var(--sign-ink);border-radius:999px;padding:4px 10px;white-space:nowrap;font-variant-numeric:tabular-nums}
 .finish{background:var(--sign);color:var(--sign-ink);outline:2px solid var(--sign-ink);outline-offset:-7px;border-radius:12px;padding:22px 18px;display:grid;gap:10px;text-align:center;animation:pop .45s ease-out}
 .finish h3{font:800 26px/1.1 var(--display);margin:0}
@@ -147,17 +210,35 @@ select.chip{font:600 14px var(--body)}
 
 <style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}[hidden]{display:none!important}</style>
 </head><body>
+<div id="splash"><svg viewBox="0 0 1235 650" preserveAspectRatio="xMinYMin slice" aria-hidden="true"><rect width="1235" height="650" fill="#fff"/><rect y="0.00" width="1235" height="50.00" fill="#B31942"/><rect y="100.00" width="1235" height="50.00" fill="#B31942"/><rect y="200.00" width="1235" height="50.00" fill="#B31942"/><rect y="300.00" width="1235" height="50.00" fill="#B31942"/><rect y="400.00" width="1235" height="50.00" fill="#B31942"/><rect y="500.00" width="1235" height="50.00" fill="#B31942"/><rect y="600.00" width="1235" height="50.00" fill="#B31942"/><rect width="494" height="350.00" fill="#0A3161"/><g fill="#fff"><polygon points="41.2,17.8 45.0,29.7 57.6,29.7 47.4,37.0 51.3,49.0 41.2,41.6 31.0,49.0 34.9,37.0 24.8,29.7 37.3,29.7"/><polygon points="123.5,17.8 127.4,29.7 139.9,29.7 129.8,37.0 133.6,49.0 123.5,41.6 113.4,49.0 117.2,37.0 107.1,29.7 119.6,29.7"/><polygon points="205.8,17.8 209.7,29.7 222.2,29.7 212.1,37.0 216.0,49.0 205.8,41.6 195.7,49.0 199.6,37.0 189.4,29.7 202.0,29.7"/><polygon points="288.2,17.8 292.0,29.7 304.6,29.7 294.4,37.0 298.3,49.0 288.2,41.6 278.0,49.0 281.9,37.0 271.8,29.7 284.3,29.7"/><polygon points="370.5,17.8 374.4,29.7 386.9,29.7 376.8,37.0 380.6,49.0 370.5,41.6 360.4,49.0 364.2,37.0 354.1,29.7 366.6,29.7"/><polygon points="452.8,17.8 456.7,29.7 469.2,29.7 459.1,37.0 463.0,49.0 452.8,41.6 442.7,49.0 446.6,37.0 436.4,29.7 449.0,29.7"/><polygon points="82.3,52.8 86.2,64.7 98.7,64.7 88.6,72.0 92.5,84.0 82.3,76.6 72.2,84.0 76.1,72.0 65.9,64.7 78.5,64.7"/><polygon points="164.7,52.8 168.5,64.7 181.1,64.7 170.9,72.0 174.8,84.0 164.7,76.6 154.5,84.0 158.4,72.0 148.3,64.7 160.8,64.7"/><polygon points="247.0,52.8 250.9,64.7 263.4,64.7 253.3,72.0 257.1,84.0 247.0,76.6 236.9,84.0 240.7,72.0 230.6,64.7 243.1,64.7"/><polygon points="329.3,52.8 333.2,64.7 345.7,64.7 335.6,72.0 339.5,84.0 329.3,76.6 319.2,84.0 323.1,72.0 312.9,64.7 325.5,64.7"/><polygon points="411.7,52.8 415.5,64.7 428.1,64.7 417.9,72.0 421.8,84.0 411.7,76.6 401.5,84.0 405.4,72.0 395.3,64.7 407.8,64.7"/><polygon points="41.2,87.8 45.0,99.7 57.6,99.7 47.4,107.0 51.3,119.0 41.2,111.6 31.0,119.0 34.9,107.0 24.8,99.7 37.3,99.7"/><polygon points="123.5,87.8 127.4,99.7 139.9,99.7 129.8,107.0 133.6,119.0 123.5,111.6 113.4,119.0 117.2,107.0 107.1,99.7 119.6,99.7"/><polygon points="205.8,87.8 209.7,99.7 222.2,99.7 212.1,107.0 216.0,119.0 205.8,111.6 195.7,119.0 199.6,107.0 189.4,99.7 202.0,99.7"/><polygon points="288.2,87.8 292.0,99.7 304.6,99.7 294.4,107.0 298.3,119.0 288.2,111.6 278.0,119.0 281.9,107.0 271.8,99.7 284.3,99.7"/><polygon points="370.5,87.8 374.4,99.7 386.9,99.7 376.8,107.0 380.6,119.0 370.5,111.6 360.4,119.0 364.2,107.0 354.1,99.7 366.6,99.7"/><polygon points="452.8,87.8 456.7,99.7 469.2,99.7 459.1,107.0 463.0,119.0 452.8,111.6 442.7,119.0 446.6,107.0 436.4,99.7 449.0,99.7"/><polygon points="82.3,122.8 86.2,134.7 98.7,134.7 88.6,142.0 92.5,154.0 82.3,146.6 72.2,154.0 76.1,142.0 65.9,134.7 78.5,134.7"/><polygon points="164.7,122.8 168.5,134.7 181.1,134.7 170.9,142.0 174.8,154.0 164.7,146.6 154.5,154.0 158.4,142.0 148.3,134.7 160.8,134.7"/><polygon points="247.0,122.8 250.9,134.7 263.4,134.7 253.3,142.0 257.1,154.0 247.0,146.6 236.9,154.0 240.7,142.0 230.6,134.7 243.1,134.7"/><polygon points="329.3,122.8 333.2,134.7 345.7,134.7 335.6,142.0 339.5,154.0 329.3,146.6 319.2,154.0 323.1,142.0 312.9,134.7 325.5,134.7"/><polygon points="411.7,122.8 415.5,134.7 428.1,134.7 417.9,142.0 421.8,154.0 411.7,146.6 401.5,154.0 405.4,142.0 395.3,134.7 407.8,134.7"/><polygon points="41.2,157.8 45.0,169.7 57.6,169.7 47.4,177.0 51.3,189.0 41.2,181.6 31.0,189.0 34.9,177.0 24.8,169.7 37.3,169.7"/><polygon points="123.5,157.8 127.4,169.7 139.9,169.7 129.8,177.0 133.6,189.0 123.5,181.6 113.4,189.0 117.2,177.0 107.1,169.7 119.6,169.7"/><polygon points="205.8,157.8 209.7,169.7 222.2,169.7 212.1,177.0 216.0,189.0 205.8,181.6 195.7,189.0 199.6,177.0 189.4,169.7 202.0,169.7"/><polygon points="288.2,157.8 292.0,169.7 304.6,169.7 294.4,177.0 298.3,189.0 288.2,181.6 278.0,189.0 281.9,177.0 271.8,169.7 284.3,169.7"/><polygon points="370.5,157.8 374.4,169.7 386.9,169.7 376.8,177.0 380.6,189.0 370.5,181.6 360.4,189.0 364.2,177.0 354.1,169.7 366.6,169.7"/><polygon points="452.8,157.8 456.7,169.7 469.2,169.7 459.1,177.0 463.0,189.0 452.8,181.6 442.7,189.0 446.6,177.0 436.4,169.7 449.0,169.7"/><polygon points="82.3,192.8 86.2,204.7 98.7,204.7 88.6,212.0 92.5,224.0 82.3,216.6 72.2,224.0 76.1,212.0 65.9,204.7 78.5,204.7"/><polygon points="164.7,192.8 168.5,204.7 181.1,204.7 170.9,212.0 174.8,224.0 164.7,216.6 154.5,224.0 158.4,212.0 148.3,204.7 160.8,204.7"/><polygon points="247.0,192.8 250.9,204.7 263.4,204.7 253.3,212.0 257.1,224.0 247.0,216.6 236.9,224.0 240.7,212.0 230.6,204.7 243.1,204.7"/><polygon points="329.3,192.8 333.2,204.7 345.7,204.7 335.6,212.0 339.5,224.0 329.3,216.6 319.2,224.0 323.1,212.0 312.9,204.7 325.5,204.7"/><polygon points="411.7,192.8 415.5,204.7 428.1,204.7 417.9,212.0 421.8,224.0 411.7,216.6 401.5,224.0 405.4,212.0 395.3,204.7 407.8,204.7"/><polygon points="41.2,227.8 45.0,239.7 57.6,239.7 47.4,247.0 51.3,259.0 41.2,251.6 31.0,259.0 34.9,247.0 24.8,239.7 37.3,239.7"/><polygon points="123.5,227.8 127.4,239.7 139.9,239.7 129.8,247.0 133.6,259.0 123.5,251.6 113.4,259.0 117.2,247.0 107.1,239.7 119.6,239.7"/><polygon points="205.8,227.8 209.7,239.7 222.2,239.7 212.1,247.0 216.0,259.0 205.8,251.6 195.7,259.0 199.6,247.0 189.4,239.7 202.0,239.7"/><polygon points="288.2,227.8 292.0,239.7 304.6,239.7 294.4,247.0 298.3,259.0 288.2,251.6 278.0,259.0 281.9,247.0 271.8,239.7 284.3,239.7"/><polygon points="370.5,227.8 374.4,239.7 386.9,239.7 376.8,247.0 380.6,259.0 370.5,251.6 360.4,259.0 364.2,247.0 354.1,239.7 366.6,239.7"/><polygon points="452.8,227.8 456.7,239.7 469.2,239.7 459.1,247.0 463.0,259.0 452.8,251.6 442.7,259.0 446.6,247.0 436.4,239.7 449.0,239.7"/><polygon points="82.3,262.8 86.2,274.7 98.7,274.7 88.6,282.0 92.5,294.0 82.3,286.6 72.2,294.0 76.1,282.0 65.9,274.7 78.5,274.7"/><polygon points="164.7,262.8 168.5,274.7 181.1,274.7 170.9,282.0 174.8,294.0 164.7,286.6 154.5,294.0 158.4,282.0 148.3,274.7 160.8,274.7"/><polygon points="247.0,262.8 250.9,274.7 263.4,274.7 253.3,282.0 257.1,294.0 247.0,286.6 236.9,294.0 240.7,282.0 230.6,274.7 243.1,274.7"/><polygon points="329.3,262.8 333.2,274.7 345.7,274.7 335.6,282.0 339.5,294.0 329.3,286.6 319.2,294.0 323.1,282.0 312.9,274.7 325.5,274.7"/><polygon points="411.7,262.8 415.5,274.7 428.1,274.7 417.9,282.0 421.8,294.0 411.7,286.6 401.5,294.0 405.4,282.0 395.3,274.7 407.8,274.7"/><polygon points="41.2,297.8 45.0,309.7 57.6,309.7 47.4,317.0 51.3,329.0 41.2,321.6 31.0,329.0 34.9,317.0 24.8,309.7 37.3,309.7"/><polygon points="123.5,297.8 127.4,309.7 139.9,309.7 129.8,317.0 133.6,329.0 123.5,321.6 113.4,329.0 117.2,317.0 107.1,309.7 119.6,309.7"/><polygon points="205.8,297.8 209.7,309.7 222.2,309.7 212.1,317.0 216.0,329.0 205.8,321.6 195.7,329.0 199.6,317.0 189.4,309.7 202.0,309.7"/><polygon points="288.2,297.8 292.0,309.7 304.6,309.7 294.4,317.0 298.3,329.0 288.2,321.6 278.0,329.0 281.9,317.0 271.8,309.7 284.3,309.7"/><polygon points="370.5,297.8 374.4,309.7 386.9,309.7 376.8,317.0 380.6,329.0 370.5,321.6 360.4,329.0 364.2,317.0 354.1,309.7 366.6,309.7"/><polygon points="452.8,297.8 456.7,309.7 469.2,309.7 459.1,317.0 463.0,329.0 452.8,321.6 442.7,329.0 446.6,317.0 436.4,309.7 449.0,309.7"/></g></svg><div class="sp-in"><div class="sign" role="img" aria-label="Next Exit: English"><span class="tab">EXIT</span><div class="in"><div class="tx2"><small>Next Exit</small><b>English</b></div><span class="arr">↗</span></div></div></div></div>
+<script>(function(){var s=document.getElementById("splash");try{if(sessionStorage.getItem("ee_sp")){s.remove();return}sessionStorage.setItem("ee_sp","1")}catch(e){}setTimeout(function(){s.classList.add("out");setTimeout(function(){s.remove()},450)},1500)})();</script>
 <div class="wrap" id="app"></div>
 
 <script>
 let L=[];
 // ---------- acesso (Supabase) ----------
 const SB="https://thotxnszjiiipqhpetba.supabase.co",SBK="sb_publishable_ruFNKM-AmNyES-aC2lg9yQ_16_IjalD";
+const GRATIS=true;// fase de teste: libera sem pagamento, com autorização do administrador
 const PIX="leniel.ireno@gmail.com",PRECO="R$ 9,99",DIAS=45,LIM_TX=5;
-let sess=null,isAdmin=false,expira=null;
+let sess=null,isAdmin=false,expira=null,plano="adulto",ind=null;
+try{const rf=new URLSearchParams(location.search).get("ref");if(rf){localStorage.setItem("ee_ref",rf.toUpperCase().slice(0,12));history.replaceState(null,"",location.pathname)}}catch(e){}
+async function rpc(fn,body){const r=await fetch(SB+"/rest/v1/rpc/"+fn,{method:"POST",headers:{apikey:SBK,Authorization:"Bearer "+await token(),"Content-Type":"application/json"},body:JSON.stringify(body||{})});if(!r.ok)throw new Error(r.status);return r.json()}
+async function applyRef(){let c=null;try{c=localStorage.getItem("ee_ref")}catch(e){}if(!c)return;try{await rpc("definir_indicacao",{p_codigo:c});localStorage.removeItem("ee_ref")}catch(e){}}
+async function loadInd(){try{ind=await rpc("minha_indicacao");const b=document.getElementById("indBox");if(b)b.outerHTML=indPanel()}catch(e){}bindInd()}
+const INDMSG=l=>`Estou aprendendo inglês com o Next Exit: English, um app com o inglês do dia a dia nos EUA. Você escreve e a tradução aparece na hora. Use meu link: ${l}`;
+function indPanel(){
+  if(isAdmin)return "";
+  const link=ind&&ind.codigo?location.origin+"/?ref="+ind.codigo:"";
+  return `<section class="panel ind" id="indBox"><h2>🎁 Indique e ganhe 30 dias ${infoBtn("ind")}</h2>
+  <p class="msg">Mande seu link para amigos. Quando um amigo assinar, você ganha <b>+30 dias grátis</b>.</p>
+  ${link?`<div class="pix"><span id="indLink">${esc(link)}</span></div>
+  <div class="row"><a class="btn" id="indWa" href="https://wa.me/?text=${encodeURIComponent(INDMSG(link))}" target="_blank" rel="noopener" style="text-decoration:none">Compartilhar no WhatsApp</a><button class="btn ghost" id="indCopy" type="button">Copiar link</button></div>
+  <p class="hint">${ind.indicacoes||0} ${ind.indicacoes===1?"amigo indicado":"amigos indicados"} · ${ind.dias_ganhos||0} dias ganhos</p>`:'<p class="hint">Carregando seu link...</p>'}</section>`;
+}
+function bindInd(){const c=document.getElementById("indCopy");if(!c)return;c.onclick=()=>{const t=document.getElementById("indLink").textContent;navigator.clipboard.writeText(INDMSG(t)).then(()=>c.textContent="Copiado!").catch(()=>{const r=document.createRange();r.selectNodeContents(document.getElementById("indLink"));const s=getSelection();s.removeAllRanges();s.addRange(r);c.textContent="Selecionado"})}}
 try{sess=JSON.parse(localStorage.getItem("ee_sess")||"null")}catch(e){}
 function setSess(d){sess={at:d.access_token,rt:d.refresh_token,exp:Date.now()+((d.expires_in||3600)-60)*1000,email:(d.user&&d.user.email)||(sess&&sess.email),nome:(d.user&&d.user.user_metadata&&d.user.user_metadata.nome)||(sess&&sess.nome)||""};try{localStorage.setItem("ee_sess",JSON.stringify(sess))}catch(e){}}
-function logout(){sess=null;try{localStorage.removeItem("ee_sess");localStorage.removeItem("ee_lic")}catch(e){}loginScreen()}
+function logout(){sess=null;ind=null;try{localStorage.removeItem("ee_sess");localStorage.removeItem("ee_lic")}catch(e){}loginScreen()}
 async function sbAuth(path,body){
   const r=await fetch(SB+"/auth/v1/"+path,{method:"POST",headers:{apikey:SBK,"Content-Type":"application/json"},body:JSON.stringify(body)});
   const d=await r.json().catch(()=>({}));
@@ -188,26 +269,29 @@ const fmtD=d=>new Date(d).toLocaleDateString("pt-BR");
 async function boot(){
   const gErr=await fromGoogle();
   if(!sess)return loginScreen(gErr);
+  await applyRef();
   app.innerHTML='<p class="msg">Carregando suas lições...</p>';
   let r=null;try{r=await authFetch("/.netlify/functions/licoes")}catch(e){}
   ownLocal();
-  if(r&&r.ok){const d=await r.json();L=d.L;SPK=d.SPK;isAdmin=d.admin;expira=d.expira_em;save("ee_lic",{L,SPK,admin:isAdmin,expira});await syncDown();if(load("ee_dirty",0))syncUp();return home()}
+  if(r&&r.ok){const d=await r.json();L=d.L;SPK=d.SPK;isAdmin=d.admin;expira=d.expira_em;plano=d.plano||"adulto";if(plano==="kids"&&filter==="all")filter="kall";save("ee_lic",{L,SPK,admin:isAdmin,expira,plano});await syncDown();if(load("ee_dirty",0))syncUp();return home()}
   if(r&&r.status===401){return logout()}
-  if(r&&r.status===402){const d=await r.json().catch(()=>({}));try{localStorage.removeItem("ee_lic")}catch(e){}return payScreen(d.expira_em)}
+  if(r&&r.status===402){const d=await r.json().catch(()=>({}));plano=d.plano||plano;try{localStorage.removeItem("ee_lic")}catch(e){}return payScreen(d.expira_em)}
   const c=load("ee_lic",null);
-  if(c&&(c.admin||(c.expira&&new Date(c.expira)>new Date()))){L=c.L;SPK=c.SPK;isAdmin=c.admin;expira=c.expira;return home()}
+  if(c&&(c.admin||(c.expira&&new Date(c.expira)>new Date()))){L=c.L;SPK=c.SPK;isAdmin=c.admin;expira=c.expira;plano=c.plano||"adulto";if(plano==="kids"&&filter==="all")filter="kall";return home()}
   app.innerHTML=`<div class="auth"><header class="signwrap"><div class="sign" role="img" aria-label="Next Exit: English"><span class="tab">EXIT</span><div class="in"><div class="tx2"><small>Next Exit</small><b>English</b></div><span class="arr">↗</span></div></div></header><section class="panel"><h2>Sem conexão</h2><p class="msg">Conecte-se à internet para carregar as lições pela primeira vez.</p><button class="btn" id="retry">Tentar de novo</button></section></div>`;
   document.getElementById("retry").onclick=boot;
 }
+let planoUp="adulto";
 function loginScreen(msg){
   let mode="in";
   const draw=()=>{
     app.innerHTML=`<div class="auth">
     <header class="signwrap"><div class="sign" role="img" aria-label="Next Exit: English"><span class="tab">EXIT</span><div class="in"><div class="tx2"><small>Next Exit</small><b>English</b></div><span class="arr">↗</span></div></div><p class="sub">A forma mais fácil de treinar seu inglês cotidiano.</p></header>
+    ${installBanner()}
     <section class="panel">
       <div class="tabs"><button class="chip" data-t="in" aria-pressed="${mode==="in"}">Entrar</button><button class="chip" data-t="up" aria-pressed="${mode==="up"}">Criar conta</button></div>
       <form id="af" class="adm">
-        ${mode==="up"?'<label for="aNome">Seu nome</label><input id="aNome" autocomplete="name" required>':""}
+        ${mode==="up"?`<label>Plano</label><div class="tabs" id="aPlano"><button type="button" class="chip" data-p="adulto" aria-pressed="${planoUp==="adulto"}">Adulto</button><button type="button" class="chip" data-p="kids" aria-pressed="${planoUp==="kids"}">🧒 Kids (7 a 12 anos)</button></div>${planoUp==="kids"?'<p class="hint">A conta Kids deve ser criada pelo pai, mãe ou responsável, com o e-mail do adulto.</p>':""}<label for="aNome">${planoUp==="kids"?"Nome da criança":"Seu nome"}</label><input id="aNome" autocomplete="name" required>`:""}
         <label for="aEmail">E-mail</label><input id="aEmail" type="email" autocomplete="email" required>
         <label for="aPass">Senha</label>
         <div style="display:flex;gap:6px"><input id="aPass" type="password" autocomplete="${mode==="up"?"new-password":"current-password"}" minlength="6" required style="flex:1;min-width:0"><button class="btn ghost" id="eye" type="button" aria-label="Mostrar senha">👁</button></div>
@@ -220,6 +304,7 @@ function loginScreen(msg){
     </section></div>`;
     app.querySelectorAll("[data-t]").forEach(b=>b.onclick=()=>{mode=b.dataset.t;msg="";draw()});
     document.getElementById("gBtn").onclick=googleLogin;
+    app.querySelectorAll("[data-p]").forEach(b=>b.onclick=()=>{planoUp=b.dataset.p;draw()});
     document.getElementById("eye").onclick=()=>{const p=document.getElementById("aPass"),v=p.type==="password";p.type=v?"text":"password";document.getElementById("eye").textContent=v?"🙈":"👁"};
     document.getElementById("af").onsubmit=async e=>{
       e.preventDefault();const err=document.getElementById("aErr"),go=document.getElementById("aGo");
@@ -228,7 +313,7 @@ function loginScreen(msg){
       try{
         if(mode==="up"){
           const nome=document.getElementById("aNome").value.trim();
-          const d=await sbAuth("signup",{email,password,data:{nome}});
+          const d=await sbAuth("signup",{email,password,data:{nome,plano:planoUp}});
           if(d.access_token)setSess(d);else setSess(await sbAuth("token?grant_type=password",{email,password}));
         }else setSess(await sbAuth("token?grant_type=password",{email,password}));
         boot();
@@ -240,65 +325,86 @@ function payScreen(exp){
   const venc=exp&&new Date(exp)<new Date();
   app.innerHTML=`<div class="auth">
   <header class="top"><div class="signwrap"><div class="sign" role="img" aria-label="Next Exit: English"><span class="tab">EXIT</span><div class="in"><div class="tx2"><small>Next Exit</small><b>English</b></div><span class="arr">↗</span></div></div><p class="sub">Olá${sess&&sess.nome?", "+esc(sess.nome):""}!</p></div><button class="btn ghost" id="out">Sair</button></header>
+  ${installBanner()}
   <section class="panel">
     <h2>${venc?"Seu acesso venceu em "+fmtD(exp):"Libere seu acesso"}</h2>
-    <span class="tag">Valor simbólico para os primeiros 300 alunos</span>
-    <div class="price">${PRECO}</div>
-    <p class="msg">Acesso a todas as lições por ${DIAS} dias.</p>
-    <label>Chave Pix (e-mail)</label>
+    ${GRATIS?`<div class="price strike">${PRECO}<span class="xx" aria-hidden="true">✕</span></div><div class="free">Grátis para teste</div>`:`<span class="tag">Valor simbólico para os primeiros 300 alunos</span>
+    <div class="price">${PRECO}</div>`}
+    <p class="msg">${plano==="kids"?"Plano Kids: acesso às lições infantis":"Acesso a todas as lições"} por ${DIAS} dias.</p>
+    ${GRATIS?`<p class="msg">Clique em <b>Autorizar</b> para pedir a liberação do app. Assim que for liberado, toque em "Verificar acesso".</p>
+    <button class="btn" id="askLib">Autorizar</button><p class="hint" id="askMsg"></p>
+    <button class="btn ghost" id="chk">Verificar acesso</button>`:`<label>Chave Pix (e-mail)</label>
     <div class="pix"><span id="pixK">${PIX}</span><button class="btn ghost" id="copy" type="button">Copiar</button></div>
     <ol class="steps">
       <li>Pague ${PRECO} pelo Pix usando a chave acima.</li>
       <li>Envie o comprovante no WhatsApp da comunidade junto com o e-mail da sua conta: <b>${esc(sess?sess.email:"")}</b></li>
       <li>Assim que o acesso for liberado, toque em "Verificar acesso".</li>
     </ol>
-    <button class="btn" id="chk">Verificar acesso</button>
-  </section></div>`;
+    <button class="btn" id="chk">Verificar acesso</button>`}
+  </section>${indPanel()}</div>`;
   document.getElementById("out").onclick=logout;
   document.getElementById("chk").onclick=boot;
-  document.getElementById("copy").onclick=e=>{const b=e.target;navigator.clipboard.writeText(PIX).then(()=>b.textContent="Copiado!").catch(()=>{const r=document.createRange();r.selectNodeContents(document.getElementById("pixK"));const s=getSelection();s.removeAllRanges();s.addRange(r);b.textContent="Selecionado"})};
+  if(ind)bindInd();else loadInd();
+  const ak=document.getElementById("askLib");if(ak)ak.onclick=async()=>{ak.disabled=true;const m=document.getElementById("askMsg");try{await rpc("solicitar_liberacao");ak.textContent="Pedido enviado ✓";m.textContent="Seu pedido foi enviado. Aguarde a liberação e toque em Verificar acesso."}catch(e){ak.disabled=false;m.textContent="Não foi possível enviar. Verifique a internet e tente de novo."}};
+  const cp=document.getElementById("copy");if(cp)cp.onclick=e=>{const b=e.target;navigator.clipboard.writeText(PIX).then(()=>b.textContent="Copiado!").catch(()=>{const r=document.createRange();r.selectNodeContents(document.getElementById("pixK"));const s=getSelection();s.removeAllRanges();s.addRange(r);b.textContent="Selecionado"})};
 }
+let lastReq=-1,audioCtx=null,lastN=0;
+function beep(){try{audioCtx=audioCtx||new (window.AudioContext||window.webkitAudioContext)();const o=audioCtx.createOscillator(),g=audioCtx.createGain();o.frequency.value=880;g.gain.setValueAtTime(.15,audioCtx.currentTime);g.gain.exponentialRampToValueAtTime(.001,audioCtx.currentTime+.6);o.connect(g).connect(audioCtx.destination);o.start();o.stop(audioCtx.currentTime+.6)}catch(e){}}
+function setBadge(n){
+  try{if(navigator.setAppBadge){n?navigator.setAppBadge(n):navigator.clearAppBadge()}}catch(e){}
+  ["admBadge","admBadge2"].forEach(i=>{const b=document.getElementById(i);if(b){b.textContent=n;b.hidden=!n}});lastN=n;
+  if(lastReq>=0&&n>lastReq)beep();lastReq=n;
+}
+async function checkReq(){
+  if(!isAdmin||!sess||!navigator.onLine)return;
+  try{const r=await fetch(SB+"/rest/v1/alunos?select=pedido_em,expira_em&pedido_em=not.is.null",{headers:{apikey:SBK,Authorization:"Bearer "+await token()}});if(!r.ok)return;
+    const rs=await r.json();setBadge(rs.filter(a=>!a.expira_em||new Date(a.expira_em)<new Date()).length)}catch(e){}
+}
+setInterval(checkReq,60000);document.addEventListener("visibilitychange",()=>{if(!document.hidden)checkReq()});
 function ago(d){if(!d)return "nunca usou";const dias=Math.floor((Date.now()-new Date(d))/864e5);return dias<=0?"hoje":dias===1?"ontem":"há "+dias+" dias"}
 function progLine(p){
   if(!p)return '<small class="pline">Ainda não usou o app</small>';
   const tot=L.filter(l=>l[1]).length||195,pct=Math.round(100*(p.concluidas||0)/tot);
-  return `<small class="pline">★ ${p.pontos||0} pts · ${p.concluidas||0}/${tot} lições (${pct}%) · ${p.respondidas||0} respondidas · ${ago(p.atualizado_em)}${p.ultima_licao?" · "+esc(p.ultima_licao):""}</small><div class="mini"><i style="width:${pct}%"></i></div>`;
+  return `<small class="pline">★ ${p.pontos||0} pts · 💎 ${p.goal&&p.goal.days?Object.keys(p.goal.days).length:0} metas · ${p.concluidas||0}/${tot} lições (${pct}%) · ${p.respondidas||0} respondidas · ${ago(p.atualizado_em)}${p.ultima_licao?" · "+esc(p.ultima_licao):""}</small><div class="mini"><i style="width:${pct}%"></i></div>`;
 }
 async function adminScreen(){
   history.pushState({l:"admin"},"");
   app.innerHTML=`<div class="lesson-head"><button class="btn ghost" id="back">← Voltar</button><h2>Alunos</h2></div>
   <input id="aq" placeholder="Buscar por nome ou e-mail">
-  <div class="row"><label for="aord" style="text-transform:none;letter-spacing:0">Ordenar:</label><select id="aord" class="chip"><option value="novo">Mais recentes</option><option value="pts">Mais pontos</option><option value="parado">Mais tempo sem usar</option><option value="venc">Vencendo primeiro</option></select></div>
+  <div class="row"><label for="aord" style="text-transform:none;letter-spacing:0">Ordenar:</label><select id="aord" class="chip"><option value="ped">Pedidos primeiro</option><option value="novo">Mais recentes</option><option value="pts">Mais pontos</option><option value="parado">Mais tempo sem usar</option><option value="venc">Vencendo primeiro</option></select></div>
   <p class="msg" id="acount">Carregando...</p><div class="adm" id="alist"></div>`;
   document.getElementById("back").onclick=()=>history.back();
   let rows=[],prog={};
   const h=async()=>({apikey:SBK,Authorization:"Bearer "+await token(),"Content-Type":"application/json"});
-  const status=a=>!a.expira_em?["wait","Aguardando"]:new Date(a.expira_em)>new Date()?["on","Ativo até "+fmtD(a.expira_em)]:["off","Venceu "+fmtD(a.expira_em)];
+  const status=a=>a.pedido_em&&(!a.expira_em||new Date(a.expira_em)<new Date())?["req","🔔 Pediu liberação"]:!a.expira_em?["wait","Aguardando"]:new Date(a.expira_em)>new Date()?["on","Ativo até "+fmtD(a.expira_em)]:["off","Venceu "+fmtD(a.expira_em)];
   const draw=()=>{
     const q=document.getElementById("aq").value.toLowerCase(),o=document.getElementById("aord").value;
     const P=a=>prog[a.id]||{},T=a=>P(a).atualizado_em?new Date(P(a).atualizado_em).getTime():0;
-    const sorted=[...rows].sort((a,b)=>o==="pts"?(P(b).pontos||0)-(P(a).pontos||0):o==="parado"?T(a)-T(b):o==="venc"?(a.expira_em?new Date(a.expira_em):Infinity)-(b.expira_em?new Date(b.expira_em):Infinity):new Date(b.criado_em)-new Date(a.criado_em));
+    const isReq=a=>a.pedido_em&&(!a.expira_em||new Date(a.expira_em)<new Date())?1:0;
+    const sorted=[...rows].sort((a,b)=>o==="ped"?(isReq(b)-isReq(a))||(new Date(b.criado_em)-new Date(a.criado_em)):o==="pts"?(P(b).pontos||0)-(P(a).pontos||0):o==="parado"?T(a)-T(b):o==="venc"?(a.expira_em?new Date(a.expira_em):Infinity)-(b.expira_em?new Date(b.expira_em):Infinity):new Date(b.criado_em)-new Date(a.criado_em));
+    const nreq=rows.filter(isReq).length;setBadge(nreq);
     const ativos=rows.filter(a=>a.expira_em&&new Date(a.expira_em)>new Date()).length;
-    document.getElementById("acount").textContent=`${rows.length} cadastrados · ${ativos} ativos · ${rows.filter(a=>!a.expira_em).length} aguardando`;
-    document.getElementById("alist").innerHTML=sorted.filter(a=>!q||(a.nome||"").toLowerCase().includes(q)||a.email.toLowerCase().includes(q)).map(a=>{const[c,t]=status(a);return `<div class="arow"><div class="who2"><b>${esc(a.nome||"(sem nome)")}</b><small>${esc(a.email)} · desde ${fmtD(a.criado_em)}</small>${progLine(prog[a.id])}</div><span class="st ${c}">${t}</span><button class="btn" data-lib="${a.id}">+${DIAS} dias</button>${c==="on"?`<button class="btn ghost" data-blk="${a.id}">Bloquear</button>`:""}</div>`}).join("")||'<p class="msg">Nenhum aluno encontrado.</p>';
+    document.getElementById("acount").textContent=`${nreq?"🔔 "+nreq+(nreq===1?" pedido · ":" pedidos · "):""}${rows.length} cadastrados · ${ativos} ativos · ${rows.filter(a=>!a.expira_em).length} aguardando`;
+    document.getElementById("alist").innerHTML=sorted.filter(a=>!q||(a.nome||"").toLowerCase().includes(q)||a.email.toLowerCase().includes(q)).map(a=>{const[c,t]=status(a);return `<div class="arow"><div class="who2"><b>${esc(a.nome||"(sem nome)")}</b><small>${esc(a.email)} · desde ${fmtD(a.criado_em)}${a.indicado_por?" · indicado por "+esc((rows.find(z=>z.id===a.indicado_por)||{}).email||"?"):""}${a.indicacoes?" · 🎁 "+a.indicacoes+" indicações":""}</small>${progLine(prog[a.id])}</div><span class="st ${c}">${t}</span><button class="btn ghost" data-pl="${a.id}" title="Trocar plano">${a.plano==="kids"?"🧒 Kids":"Adulto"} ⇄</button><button class="btn" data-lib="${a.id}">+${DIAS} dias</button>${c==="on"?`<button class="btn ghost" data-blk="${a.id}">Bloquear</button>`:""}</div>`}).join("")||'<p class="msg">Nenhum aluno encontrado.</p>';
   };
   const setExp=async(id,val)=>{
-    const r=await fetch(SB+"/rest/v1/alunos?id=eq."+id,{method:"PATCH",headers:{...await h(),Prefer:"return=representation"},body:JSON.stringify({expira_em:val})});
+    const r=await fetch(SB+"/rest/v1/alunos?id=eq."+id,{method:"PATCH",headers:{...await h(),Prefer:"return=representation"},body:JSON.stringify({expira_em:val,pedido_em:null})});
     if(!r.ok){alertMsg("Não foi possível salvar. Tente de novo.");return}
     const [u]=await r.json();rows=rows.map(a=>a.id===id?u:a);draw();
   };
   const alertMsg=t=>{document.getElementById("acount").textContent=t};
   document.getElementById("aq").oninput=draw;document.getElementById("aord").onchange=draw;
   document.getElementById("alist").onclick=e=>{
-    const l=e.target.closest("[data-lib]"),b=e.target.closest("[data-blk]");
+    const l=e.target.closest("[data-lib]"),b=e.target.closest("[data-blk]"),pl=e.target.closest("[data-pl]");
+    if(pl){const a=rows.find(x=>x.id===pl.dataset.pl);pl.disabled=true;(async()=>{const r=await fetch(SB+"/rest/v1/alunos?id=eq."+a.id,{method:"PATCH",headers:{...await h(),Prefer:"return=representation"},body:JSON.stringify({plano:a.plano==="kids"?"adulto":"kids"})});if(r.ok){const [u]=await r.json();rows=rows.map(z=>z.id===u.id?u:z);draw()}else alertMsg("Não foi possível trocar o plano.")})()}
     if(l){const a=rows.find(x=>x.id===l.dataset.lib);const base=a.expira_em&&new Date(a.expira_em)>new Date()?new Date(a.expira_em):new Date();base.setDate(base.getDate()+DIAS);l.disabled=true;setExp(a.id,base.toISOString())}
     if(b){b.disabled=true;setExp(b.dataset.blk,new Date().toISOString())}
   };
-  try{const [r,rp]=await Promise.all([fetch(SB+"/rest/v1/alunos?select=*&order=criado_em.desc",{headers:await h()}),fetch(SB+"/rest/v1/progresso?select=id,pontos,concluidas,respondidas,ultima_licao,atualizado_em",{headers:await h()})]);if(!r.ok)throw 0;rows=await r.json();if(rp.ok)(await rp.json()).forEach(p=>prog[p.id]=p);draw()}
+  try{const [r,rp]=await Promise.all([fetch(SB+"/rest/v1/alunos?select=*&order=criado_em.desc",{headers:await h()}),fetch(SB+"/rest/v1/progresso?select=id,pontos,concluidas,respondidas,ultima_licao,atualizado_em,goal:dados->goal",{headers:await h()})]);if(!r.ok)throw 0;rows=await r.json();if(rp.ok)(await rp.json()).forEach(p=>prog[p.id]=p);draw()}
   catch(e){console.error("admin",e);alertMsg("Não foi possível carregar os alunos. Verifique a internet.")}
 }
 let SPK={};
-const LV={b:"Básico",i:"Intermediário",a:"Avançado",v:"Vocabulário",t:"Textos",h:"Histórias"};
+const LV={k:"Kids",b:"Básico",i:"Intermediário",a:"Avançado",v:"Vocabulário",t:"Textos",h:"Histórias"};
 
 // ---------- estado local ----------
 function load(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}}
@@ -309,7 +415,7 @@ let pos=load("ee_pos",{});             // {id:frase atual}
 let custom=load("ee_custom",[]);       // [{title,s:[[en,pt],...]}]
 let saveT=null,syncing=false;
 function persist(){
-  save("ee_done",done);save("ee_pts",pts);save("ee_pos",pos);save("ee_custom",custom);save("ee_dirty",1);
+  save("ee_done",done);save("ee_pts",pts);save("ee_pos",pos);save("ee_custom",custom);save("ee_goal",goal);save("ee_dirty",1);
   clearTimeout(saveT);saveT=setTimeout(syncUp,3000);
 }
 async function syncUp(){
@@ -318,7 +424,7 @@ async function syncUp(){
     const ids=Object.keys(done),last=load("ee_last",null),lx=last&&L.length?all().find(y=>y.id===last.id):null;
     const r=await fetch(SB+"/rest/v1/rpc/salvar_progresso",{method:"POST",headers:{apikey:SBK,Authorization:"Bearer "+await token(),"Content-Type":"application/json"},
       body:JSON.stringify({p_pontos:pts,p_concluidas:ids.filter(k=>k[0]==="L"&&!k.endsWith("R")).length,p_respondidas:ids.filter(k=>k.endsWith("R")).length,
-        p_ultima:lx?`Exit ${lx.n} · ${lx.title}`:null,p_dados:{done,pos,pts,custom,last}})});
+        p_ultima:lx?`Exit ${lx.n} · ${lx.title}`:null,p_dados:{done,pos,pts,custom,last,goal}})});
     if(r.ok)save("ee_dirty",0);
   }catch(e){}
   syncing=false;
@@ -333,13 +439,14 @@ async function syncDown(){
     for(const k in d.pos||{})if(!(k in pos))pos[k]=d.pos[k];
     if((d.custom||[]).length>custom.length)custom=d.custom;
     if(d.last&&!load("ee_last",null))save("ee_last",d.last);
+    if(d.goal&&d.goal.days){goal.days=Object.assign({},d.goal.days,goal.days);goal.gems=Object.keys(goal.days).length}
     save("ee_done",done);save("ee_pts",pts);save("ee_pos",pos);save("ee_custom",custom);
   }catch(e){}
 }
 function ownLocal(){
   const who=sess&&sess.email;if(!who)return;
   const own=load("ee_owner",null);if(!own){save("ee_owner",who);return}
-  if(own!==who){done={};pos={};pts=0;custom=[];["ee_done","ee_pos","ee_pts","ee_custom","ee_last","ee_dirty"].forEach(k=>{try{localStorage.removeItem(k)}catch(e){}});save("ee_owner",who)}
+  if(own!==who){done={};pos={};pts=0;custom=[];goal={days:{},gems:0};today0={d:"",s:0};["ee_done","ee_pos","ee_pts","ee_custom","ee_last","ee_dirty","ee_goal","ee_today"].forEach(k=>{try{localStorage.removeItem(k)}catch(e){}});save("ee_owner",who)}
 }
 let filter="all";
 const app=document.getElementById("app");
@@ -347,48 +454,143 @@ const esc=s=>s.replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&qu
 const norm=s=>s.replace(/[’‘]/g,"'").replace(/[“”]/g,'"').replace(/\s+/g," ");
 
 
-function all(){return L.map((l,i)=>({id:"L"+i,n:i+1,title:l[0],lv:l[1],s:l[2],book:l[3]&&l[3].book,q:l[3]&&l[3].q}))
+function all(){return L.map((l,i)=>({id:"L"+i,n:i+1,title:l[0],lv:l[1],s:l[2],book:l[3]&&l[3].book,q:l[3]&&l[3].q,cat:l[3]&&l[3].cat,em:l[3]&&l[3].em,kg:l[3]&&l[3].g,kw:l[3]&&l[3].w,ke:l[3]&&l[3].e}))
   .concat(custom.map((c,i)=>({id:"C"+i,n:"M"+(i+1),title:c.title,lv:"m",s:c.s})))}
 
 // ---------- lista ----------
-let rate=load("ee_rate",1),voice=null;
-function pickVoice(){try{const v=speechSynthesis.getVoices();voice=v.find(z=>z.lang==="en-US"&&/natural|google|samantha/i.test(z.name))||v.find(z=>z.lang==="en-US")||v.find(z=>z.lang.startsWith("en"))||null}catch(e){}}
+// ---------- instalar o app ----------
+let instEvt=null;
+window.addEventListener("beforeinstallprompt",e=>{e.preventDefault();instEvt=e;const b=document.getElementById("instBox");if(b)b.outerHTML=installBanner(true)});
+window.addEventListener("appinstalled",()=>{save("ee_inst",1);const b=document.getElementById("instBox");if(b)b.remove()});
+const UA=navigator.userAgent||"";
+const isIOS=/iPhone|iPad|iPod/.test(UA)||(navigator.platform==="MacIntel"&&navigator.maxTouchPoints>1);
+const isAndroid=/Android/i.test(UA),isSamsung=/SamsungBrowser/i.test(UA),inApp=/FBAN|FBAV|Instagram|Line\/|; wv\)|WhatsApp/i.test(UA);
+const isStandalone=()=>{try{return matchMedia("(display-mode: standalone)").matches||navigator.standalone===true}catch(e){return false}};
+const SHARE_IC='<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px"><path d="M12 3v12"/><path d="M8 7l4-4 4 4"/><path d="M5 11v8a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-8"/></svg>';
+function installSteps(){
+  if(inApp)return `<ol class="steps"><li>Este link abriu dentro de outro app.</li><li>Toque nos <b>3 pontinhos</b> ou em <b>${SHARE_IC}</b> e escolha <b>Abrir no navegador</b> (Chrome ou Safari).</li><li>Depois, siga as instruções que vão aparecer.</li></ol>`;
+  if(isIOS)return `<ol class="steps"><li>Toque no botão <b>Compartilhar</b> ${SHARE_IC} (no Safari fica embaixo; no Chrome, ao lado do endereço).</li><li>Role a lista e toque em <b>Adicionar à Tela de Início</b> ➕.</li><li>Toque em <b>Adicionar</b>. O ícone verde vai aparecer na sua tela.</li></ol>`;
+  if(isSamsung)return `<ol class="steps"><li>Toque no menu <b>☰</b> embaixo.</li><li>Toque em <b>Adicionar página a</b> → <b>Tela inicial</b>.</li></ol>`;
+  if(isAndroid)return `<ol class="steps"><li>Toque nos <b>3 pontinhos ⋮</b> no canto de cima.</li><li>Toque em <b>Instalar app</b> ou <b>Adicionar à tela inicial</b>.</li><li>Confirme em <b>Instalar</b>.</li></ol>`;
+  return `<ol class="steps"><li>No Chrome ou Edge do computador, clique no ícone de instalar ⊕ na barra de endereço.</li><li>Ou abra este link no seu celular para instalar lá.</li></ol>`;
+}
+function installBanner(force){
+  if(isStandalone()||load("ee_inst",0))return "";
+  const d=load("ee_inst_no",0);if(!force&&d&&Date.now()-d<3*864e5)return "";
+  return `<section class="panel inst" id="instBox"><h2>📲 Instale o app no seu celular</h2>
+  <p class="msg">Assim ele abre direto pelo ícone, em tela cheia, e funciona até sem internet.</p>
+  ${instEvt?'<button class="btn" type="button" data-inst="go">Instalar agora</button>':installSteps()}
+  <div class="row"><button class="btn ghost" type="button" data-inst="no">Agora não</button>${instEvt?"":'<button class="btn ghost" type="button" data-inst="done">Já instalei</button>'}</div></section>`;
+}
+document.addEventListener("click",async e=>{
+  const b=e.target.closest("[data-inst]");if(!b)return;const a=b.dataset.inst,box=document.getElementById("instBox");
+  if(a==="go"&&instEvt){instEvt.prompt();const r=await instEvt.userChoice.catch(()=>null);instEvt=null;if(r&&r.outcome==="accepted"){save("ee_inst",1);box&&box.remove()}else if(box)box.outerHTML=installBanner(true)}
+  if(a==="no"){save("ee_inst_no",Date.now());box&&box.remove()}
+  if(a==="done"){save("ee_inst",1);box&&box.remove()}
+});
+// ---------- meta diária ----------
+const GOAL=300;let goal=load("ee_goal",{days:{},gems:0}),today0=load("ee_today",{d:"",s:0}),lastAct=Date.now();
+const dkey=(d=new Date())=>d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
+const gemIcon=()=>plano==="kids"?"🍩":"💎",gemName=n=>plano==="kids"?(n===1?"rosquinha":"rosquinhas"):(n===1?"diamante":"diamantes");
+["keydown","input","pointerdown","touchstart"].forEach(ev=>document.addEventListener(ev,()=>lastAct=Date.now(),{passive:true}));
+function streak(){let n=0,d=new Date();if(!goal.days[dkey(d)])d.setDate(d.getDate()-1);while(goal.days[dkey(d)]){n++;d.setDate(d.getDate()-1)}return n}
+function fmtT(s){s=Math.min(s,GOAL);return Math.floor(s/60)+":"+String(s%60).padStart(2,"0")}
+setInterval(()=>{
+  const el=document.getElementById("tmr");if(!el||document.hidden)return;
+  const k=dkey();if(today0.d!==k)today0={d:k,s:0};
+  if(goal.days[k])return;
+  const idle=Date.now()-lastAct>60000;el.classList.toggle("paused",idle);
+  if(idle){el.title="Pausado: toque ou digite para continuar";return}
+  today0.s++;if(today0.s%10===0)save("ee_today",today0);
+  el.querySelector("b").textContent=fmtT(today0.s);el.style.setProperty("--p",Math.min(1,today0.s/GOAL));
+  if(today0.s>=GOAL&&!goal.days[k]){goal.days[k]=true;goal.gems=Object.keys(goal.days).length;save("ee_today",today0);persist();el.outerHTML=timerHtml();goalWin()}
+},1000);
+function goalWin(){
+  const o=document.createElement("div");o.className="overlay win";
+  o.innerHTML=`<div class="modal" style="text-align:center"><div style="font-size:84px;line-height:1">👍</div><h2>Meta do dia cumprida!</h2><p>Você estudou 5 minutos hoje e ganhou</p><div style="font-size:44px">${gemIcon()} +1</div><p class="msg">${streak()} ${streak()===1?"dia seguido":"dias seguidos"} 🔥 · total: ${goal.gems} ${gemName(goal.gems)}</p><button class="btn" id="winOk">Continuar</button></div>`;
+  document.body.appendChild(o);o.onclick=e=>{if(e.target===o||e.target.id==="winOk")o.remove()};
+}
+function timerHtml(){const k=dkey();if(today0.d!==k)today0={d:k,s:0};const ok=goal.days[k];return `<span class="tmr${ok?" done":""}" id="tmr" style="--p:${Math.min(1,today0.s/GOAL)}" title="Meta do dia: 5 minutos">${ok?gemIcon():"⏱"} <b>${ok?"Meta ✓":fmtT(today0.s)}</b>${ok?"":"/5:00"}</span>`}
+function profileHtml(){
+  const k=dkey(),d=new Date(),dow=(d.getDay()+6)%7,mon=new Date(d);mon.setDate(d.getDate()-dow);
+  const days=["S","T","Q","Q","S","S","D"].map((l,i)=>{const x=new Date(mon);x.setDate(mon.getDate()+i);const ok=goal.days[dkey(x)];return `<span class="wd${ok?" ok":""}${i===dow?" now":""}" title="${fmtD(x)}">${ok?gemIcon():l}</span>`}).join("");
+  const s=today0.d===k?today0.s:0,ok=goal.days[k];
+  return `<section class="panel prof"><div class="profrow"><span class="gem">${gemIcon()} <b>${goal.gems||0}</b> <small>${gemName(goal.gems||0)}</small></span><span class="gem">🔥 <b>${streak()}</b> <small>${streak()===1?"dia seguido":"dias seguidos"}</small></span>${infoBtn("meta")}</div>
+  <div class="week">${days}</div>
+  <div class="todayb"><span>${ok?"Meta de hoje cumprida 👍":"Hoje: "+fmtT(s)+" de 5:00"}</span><div class="prog"><i style="width:${Math.min(100,s/GOAL*100)}%"></i></div></div></section>`;
+}
+let rate=load("ee_rate",1),voice=null,VF=null,VM=null,VN=null,VPT=null;
+const FEM=/female|samantha|zira|susan|karen|moira|tessa|victoria|allison|ava|serena|aria|jenny|libby|sonia|fiona|joanna|salli|kendra|kimberly|ivy|emma|olivia|natasha|michelle/i,MASC=/\bmale|daniel|alex|fred|david|mark|guy|ryan|george|thomas|arthur|aaron|rishi|matthew|joey|justin|brian|christopher|eric|roger|steffan|tom/i;
+function pickVoice(){try{
+  const v=speechSynthesis.getVoices(),en=v.filter(z=>/^en[-_]US/i.test(z.lang)),all=en.length?en:v.filter(z=>/^en/i.test(z.lang));
+  voice=all.find(z=>/natural|google|samantha/i.test(z.name))||all[0]||null;
+  VF=all.find(z=>FEM.test(z.name))||null;VM=all.find(z=>MASC.test(z.name)&&!FEM.test(z.name))||null;
+  VN=voice;VPT=v.find(z=>/^pt[-_]BR/i.test(z.lang))||v.find(z=>/^pt/i.test(z.lang))||null;
+}catch(e){}}
+const FEMN=/^(Professora|Mamãe|Supervisora|Garçonete|Amiga|Vendedora|Bibliotecária|Recepcionista|Veterinária|Enfermeira|Gerente|Atendente|Tartaruga|Cliente|Contato|RH|Proprietária|Destinatário|Seguradora)$/;
+function voiceFor(w){
+  if(!w)return {v:VN||voice,p:1};
+  const n=w.name||"";
+  if(w.kid)return {v:VF||voice,p:1.45};
+  if(n==="Lobo")return {v:VM||voice,p:.6};
+  if(/^(Porquinho|Lebre|Ursinho)$/.test(n))return {v:VF||voice,p:1.6};
+  if(w.you)return {v:VM||voice,p:VM?1:.85};
+  if(FEMN.test(n))return {v:VF||voice,p:VF?1:1.3};
+  if(n==="Narrador")return {v:VN||voice,p:1};
+  return {v:(VM&&VF?VM:voice),p:VM?.9:.75};
+}
+function whoOf(x,i){
+  if(x.kw){const n=x.kw[i];return {name:n,you:n==="Você",kid:n==="Você"}}
+  const sp=x.id&&x.id[0]==="L"?SPK[x.id.slice(1)]:null;
+  if(sp)return sp[1][i]==="Y"?{name:"Você",you:true}:{name:sp[0]};
+  return null;
+}
 try{pickVoice();speechSynthesis.onvoiceschanged=pickVoice}catch(e){}
 function stopSpeak(){try{speechSynthesis.cancel()}catch(e){}}
 const RATES=[[1,"Normal"],[.75,"Lenta"],[.5,"Bem lenta"]];
 if(!RATES.some(r=>r[0]===rate))rate=1;
-function speak(t,onend,r){
-  if(!("speechSynthesis" in window)){window.open("https://translate.google.com/?sl=en&tl=pt&op=translate&text="+encodeURIComponent(t),"_blank");return}
-  stopSpeak();const u=new SpeechSynthesisUtterance(t);u.lang="en-US";u.rate=r||rate;if(voice)u.voice=voice;
+function speak(t,onend,r,who,keep){
+  if(!("speechSynthesis" in window)){if(!keep)window.open("https://translate.google.com/?sl=en&tl=pt&op=translate&text="+encodeURIComponent(t),"_blank");return}
+  if(!keep)stopSpeak();const u=new SpeechSynthesisUtterance(t);
+  if(who==="pt"){u.lang="pt-BR";if(VPT)u.voice=VPT;u.rate=1}
+  else{const vf=voiceFor(who);u.lang="en-US";u.rate=r||rate;if(vf.v)u.voice=vf.v;u.pitch=vf.p}
   if(onend){u.onend=onend;u.onerror=onend}
   speechSynthesis.speak(u);
 }
+const KF=[["kall","Tudo"],["escola","🎒 Escola"],["casa","🏠 Casa"],["uteis","🍦 Palavras úteis"],["frases","💬 Frases"],["palavras","🔤 Vocabulário"],["historias","📚 Histórias"],["album","⭐ Meu álbum"]];
 function home(){stopSpeak();
-  const items=all().filter(x=>filter==="all"||x.lv===filter);
+  const kidsMode=plano==="kids"||(isAdmin&&(filter==="k"||KF.some(f=>f[0]===filter)));
+  document.body.classList.toggle("kids",kidsMode);
+  const items=all().filter(x=>kidsMode?(x.lv==="k"&&(filter==="kall"||filter==="k"||x.cat===filter)):(filter==="all"?x.lv!=="k":x.lv===filter));
   const total=L.length,ok=L.filter((_,i)=>done["L"+i]).length;
   app.innerHTML=`
-  <header class="top"><div class="signwrap"><div class="sign" role="img" aria-label="Next Exit: English"><span class="tab">EXIT</span><div class="in"><div class="tx2"><small>Next Exit</small><b>English</b></div><span class="arr">↗</span></div></div><p class="sub">A forma mais fácil de treinar seu inglês cotidiano.</p></div><div class="hbtns">${isAdmin?'<button class="btn" id="admin">Alunos</button>':""}<button class="btn ghost" id="info" style="white-space:nowrap">ℹ Ajuda</button><button class="btn ghost" id="out">Sair</button></div></header>
+  <header class="top"><div class="signwrap"><div class="sign" role="img" aria-label="Next Exit: English"><span class="tab">EXIT</span><div class="in"><div class="tx2"><small>Next Exit</small><b>English</b></div><span class="arr">↗</span></div></div><p class="sub">A forma mais fácil de treinar seu inglês cotidiano.</p></div><button class="menub" id="menuB" aria-label="Abrir menu">☰<span class="nbadge" id="admBadge" hidden>0</span></button></header>
   ${!isAdmin&&expira?`<p class="hint">Acesso liberado até ${fmtD(expira)}</p>`:""}
+  ${load("ee_inst_seen",0)?"":installBanner()}
+  ${statLine()}
   ${resumeBtn()}
-  <div class="bar">${[["all","Todas"],["b","Básico"],["i","Intermediário"],["a","Avançado"],["v","Vocabulário"],["t","Textos"],["h","📖 Histórias"],["m","Meus textos"]].map(([k,t])=>`<button class="chip" data-f="${k}" aria-pressed="${filter===k}">${t}</button>`).join("")}
-  <span class="stat">${ok}/${total} concluídas</span><span class="pill">★ ${pts} pts</span></div>
-  ${filter==="m"||filter==="all"?addPanel():""}
+  <div class="bar">${(kidsMode?(isAdmin?[["all","← Adulto"]].concat(KF):KF):[["all","Todas"],["b","Básico"],["i","Intermediário"],["a","Avançado"],["v","Vocabulário"],["t","Textos"],["h","📖 Histórias"],["m","Meus textos"]].concat(isAdmin?[["kall","🧒 Kids"]]:[])).map(([k,t])=>`<button class="chip" data-f="${k}" aria-pressed="${filter===k}">${t}${INFO[k]?infoBtn(k):""}</button>`).join("")}
+  <span class="stat">${ok}/${total} concluídas</span></div>
+  ${!kidsMode&&filter==="m"?addPanel():""}
+  ${filter==="album"?album():""}
   <div class="list">${items.map(x=>`
     <button class="exit${locked(x)?" lock":""}" data-id="${x.id}" ${locked(x)?'aria-disabled="true"':""}>
-      <span class="num">${x.lv==="h"?"📖":"Exit"}<b>${x.lv==="h"?x.title.match(/Cap\. (\d+)/)[1]:x.n}</b></span>
+      <span class="num${x.lv==="k"?" knum":""}">${x.lv==="k"?x.em:x.lv==="h"?"📖":"Exit"}<b>${x.lv==="k"?"":x.lv==="h"?x.title.match(/Cap\. (\d+)/)[1]:x.n}</b></span>
       <span class="t">${x.book?`<small class="bk">${esc(x.book)}</small>`:""}<strong>${esc(x.lv==="h"?x.title.replace(/^Cap\. \d+ · /,""):x.title)}</strong><small>${locked(x)?"🔒 Conclua o capítulo anterior":(x.lv==="m"?"Meu texto":LV[x.lv])+" · "+x.s.length+" frases"}${pos[x.id]?` · parou na frase ${pos[x.id]+1}`:""}</small></span>
-      ${done[x.id+"R"]?'<span class="done">FEITA ★</span>':done[x.id]?'<span class="done">FEITA</span>':""}
-    </button>`).join("")||'<p class="msg">Nenhum texto ainda. Cole um texto acima para criar sua lição.</p>'}</div>`;
+      ${x.lv==="k"&&done[x.id+"S"]?`<span class="done">${"⭐".repeat(done[x.id+"S"])}</span>`:done[x.id+"R"]?'<span class="done">FEITA ★</span>':done[x.id]?'<span class="done">FEITA</span>':""}
+    </button>`).join("")||(filter==="album"?"":'<p class="msg">Nenhum texto ainda. Cole um texto acima para criar sua lição.</p>')}</div>`;
   app.querySelectorAll("[data-f]").forEach(b=>b.onclick=()=>{filter=b.dataset.f;home()});
   app.querySelectorAll("[data-id]").forEach(b=>b.onclick=()=>{if(b.getAttribute("aria-disabled")){b.animate&&b.animate([{transform:"translateX(-4px)"},{transform:"translateX(4px)"},{transform:"none"}],{duration:200});return}lesson(b.dataset.id)});
-  document.getElementById("info").onclick=showInfo;
-  document.getElementById("out").onclick=logout;
-  if(isAdmin)document.getElementById("admin").onclick=adminScreen;
+  document.getElementById("menuB").onclick=openMenu;
+  const sl=document.getElementById("statL");if(sl)sl.onclick=()=>sheet("👤 Meu perfil",profileHtml()+`<p class="msg">★ ${pts} pontos no total</p>`);
+  if(document.getElementById("instBox"))save("ee_inst_seen",1);
+  if(isAdmin)checkReq();
+  if(!ind)loadInd();
   const rb=document.getElementById("resume");if(rb)rb.onclick=()=>{const l=load("ee_last",null);if(l)lesson(l.id,l.m)};
   const go=document.getElementById("addGo");
   if(go)go.onclick=addCustom;
 }
-function addPanel(){return `<section class="panel"><h2>Criar lição com seu texto</h2>
+function addPanel(){return `<section class="panel"><h2>Criar lição com seu texto ${infoBtn("m")}</h2>
   <label for="cTitle">Título</label><input id="cTitle" placeholder="Ex.: E-mail do meu chefe">
   <label for="cText">Texto em inglês</label><textarea id="cText" rows="4" placeholder="Cole aqui um texto em inglês..."></textarea>
   <div class="row"><button class="btn" id="addGo">Traduzir e criar lição</button><span class="msg" id="addMsg">A tradução é feita automaticamente.</span></div></section>`}
@@ -418,13 +620,13 @@ async function addCustom(){
 function lesson(id,mode){
   const x=all().find(y=>y.id===id);if(!x||locked(x))return home();
   save("ee_last",{id,m:mode==="r"?"r":""});
-  const sp=x.id[0]==="L"?SPK[x.id.slice(1)]:null;
+  const sp=x.id[0]==="L"&&x.lv!=="k"?SPK[x.id.slice(1)]:null;
   const canR=!!(sp&&sp[1].includes("Y")&&sp[1].includes("O"));
   if(mode==="r"&&canR&&done[id])return respond(x,sp);let cur=Math.min(pos[id]||0,x.s.length);if(cur>=x.s.length)cur=0;
-  const review=mode!=="p"&&!!done[id]&&!pos[id];if(review)cur=x.s.length;const t0=Date.now();let gained=0;
+  const review=mode!=="p"&&!!done[id]&&!pos[id];if(review)cur=x.s.length;const t0=Date.now();let gained=0,errs=0,wasBad=false,spokenW=new Set(),stars=3;
   app.innerHTML=`
-  <div class="lesson-head"><button class="btn ghost" id="back">← Voltar</button><h2>${esc(x.title)}</h2><span class="pill" id="ptsPill">★ ${pts} pts</span></div>
-  <span class="lvl">${x.lv==="m"?"Meu texto":LV[x.lv]} · Exit ${x.n}${review?" · Concluída ✓":""}</span>
+  <div class="lesson-head"><button class="btn ghost" id="back">← Voltar</button><h2>${esc(x.title)}</h2>${timerHtml()}<span class="pill" id="ptsPill">★ ${pts} pts</span></div>
+  <span class="lvl">${x.lv==="m"?"Meu texto":LV[x.lv]}${x.lv==="k"?" "+x.em:" · Exit "+x.n}${review?" · Concluída ✓":""}</span>
   ${review?`<div class="revbar"><button class="btn" id="redo">↻ Refazer</button><button class="btn ghost" id="la2">▶ Ouvir lição</button><button class="btn ghost" id="spd2"></button></div>`:""}
   ${canR?modeBar(id,"p"):""}
   <div class="prog"><i id="pg"></i></div>
@@ -432,26 +634,26 @@ function lesson(id,mode){
   <section class="panel" id="typPanel">
     <label for="typ">Digite a frase destacada</label>
     <textarea id="typ" rows="2" autocomplete="off" autocapitalize="off" spellcheck="false"></textarea>
-    <div class="row"><button class="btn ghost" id="listen">🔊 Ouvir frase</button><button class="btn ghost" id="listenAll">▶ Ouvir lição</button><button class="btn ghost" id="spd"></button><button class="btn ghost" id="skip">Pular frase</button>
+    <div class="row"><button class="btn ghost" id="listen">🔊 Ouvir frase</button><button class="btn ghost" id="listenAll">▶ Ouvir lição</button><button class="btn ghost" id="spd"></button>${infoBtn("spd")}<button class="btn ghost" id="skip">Pular frase</button>
     <span class="hint">Maiúsculas não contam. Verde = certo, vermelho = errado.</span></div>
   </section>`;
   const box=document.getElementById("sents"),typ=document.getElementById("typ");
   if(history.state&&history.state.l)history.replaceState({l:id},"");else history.pushState({l:id},"");
   const goHome=()=>{if(history.state&&history.state.l)history.back();else home()};
   document.getElementById("back").onclick=goHome;bindModes(id);
-  const who=i=>sp?`<span class="who${sp[1][i]==="Y"?" you":""}">${sp[1][i]==="Y"?"Você":esc(sp[0])}</span>`:"";
+  const who=i=>x.kw?(x.kw[i]==="Narrador"?"":`<span class="who${x.kw[i]==="Você"?" you":""}">${esc(x.kw[i])}</span>`):sp?`<span class="who${sp[1][i]==="Y"?" you":""}">${sp[1][i]==="Y"?"Você":esc(sp[0])}</span>`:"";
   document.getElementById("skip").onclick=()=>next();
   const lis=document.getElementById("listen"),la=document.getElementById("listenAll"),spd=document.getElementById("spd");
   let playingAll=false;
   const setSpd=()=>spd.textContent="⏱ "+RATES.find(r=>r[0]===rate)[1];setSpd();
   spd.onclick=()=>{const i=RATES.findIndex(r=>r[0]===rate);rate=RATES[(i+1)%RATES.length][0];save("ee_rate",rate);setSpd()};
-  lis.onclick=()=>{if(x.s[cur])speak(x.s[cur][0])};
+  lis.onclick=()=>{if(x.s[cur])speak(x.s[cur][0],null,null,whoOf(x,cur))};
   la.onclick=()=>{
     if(playingAll){stopSpeak();playingAll=false;la.textContent="▶ Ouvir lição";return}
     playingAll=true;la.textContent="■ Parar";let k=0;
-    const go=()=>{if(!playingAll||k>=x.s.length){playingAll=false;la.textContent="▶ Ouvir lição";return}speak(x.s[k++][0],go)};go();
+    const go=()=>{if(!playingAll||k>=x.s.length){playingAll=false;la.textContent="▶ Ouvir lição";return}speak(x.s[k][0],go,null,whoOf(x,k++))};go();
   };
-  box.onclick=e=>{if(wordTap(e))return;const b=e.target.closest(".say");if(b)speak(x.s[+b.dataset.i][0],null,b.dataset.slow?.5:null)};
+  box.onclick=e=>{if(wordTap(e))return;const b=e.target.closest(".say");if(b)speak(x.s[+b.dataset.i][0],null,b.dataset.slow?.5:null,whoOf(x,+b.dataset.i))};
   if(review){
     document.getElementById("redo").onclick=()=>lesson(id,"p");
     const s2=document.getElementById("spd2"),sync2=()=>{s2.textContent=spd.textContent;la2.textContent=la.textContent};const la2=document.getElementById("la2");
@@ -460,7 +662,7 @@ function lesson(id,mode){
   function render(){
     const t=norm(typ.value);
     box.innerHTML=x.s.map(([en,pt],i)=>{
-      if(i<cur)return `<div class="sent">${who(i)}<div class="en donee"><span class="sbtn"><button class="say" data-i="${i}" aria-label="Ouvir">🔊</button><button class="say" data-i="${i}" data-slow="1" aria-label="Ouvir bem devagar">🐢</button></span><span class="tx">${words(en)}</span></div><div class="pt">${esc(pt)}</div></div>`;
+      if(i<cur)return `<div class="sent">${who(i)}<div class="en donee"><span class="sbtn"><button class="say" data-i="${i}" aria-label="Ouvir">🔊</button><button class="say" data-i="${i}" data-slow="1" aria-label="Ouvir bem devagar">🐢</button></span>${x.ke&&x.ke[i]?`<span class="kem">${x.ke[i]}</span>`:""}<span class="tx">${words(en)}</span></div><div class="pt">${esc(pt)}</div></div>`;
       if(i>cur)return "";
       const tg=norm(en);let html="",good=0,ok=true;
       for(let k=0;k<tg.length;k++){
@@ -470,7 +672,7 @@ function lesson(id,mode){
       }
       const w=pt.split(" "),show=Math.ceil(w.length*good/tg.length);
       const ptHtml=w.map((z,j)=>j<show?esc(z):`<span class="h">${esc(z)}</span>`).join(" ");
-      return `<div class="sent cur">${who(i)}<div class="en">${html}</div><div class="pt">${ptHtml}</div></div>`;
+      return `<div class="sent cur">${who(i)}${x.ke&&x.ke[i]?`<div class="kemb">${x.ke[i]}</div>`:""}<div class="en">${html}</div><div class="pt">${ptHtml}</div></div>`;
     }).join("");
     const fin=cur>=x.s.length;
     document.getElementById("typPanel").hidden=fin;
@@ -481,7 +683,7 @@ function lesson(id,mode){
       {const f0=document.getElementById("finish");if(f0)f0.remove();}
       box.insertAdjacentHTML("afterend",`<section class="finish" id="finish">
         <h3>${x.lv==="h"?(nx&&nx.book===x.book?"Capítulo concluído! ✓":"Livro concluído! 📖"):"Lição concluída! ✓"}</h3>${canR&&!done[id+"R"]?"<p>Modo Responder liberado!</p>":""}
-        <div class="big">${gained?"+"+gained+" pontos":"Revisão feita"}</div>
+        ${x.lv==="k"?`<div class="big kst">${"⭐".repeat(stars)}${"☆".repeat(3-stars)}</div><p class="ksticker">Você ganhou a figurinha <span>${x.em}</span>!</p>`:`<div class="big">${gained?"+"+gained+" pontos":"Revisão feita"}</div>`}
         <p>${x.s.length} frases · ${min} min · Total: <span id="ptsT">${pts}</span> pontos</p>
         ${storyQ(x,id)}
         <div class="row"><button class="btn" id="laF">${x.lv==="h"?"▶ Ouvir capítulo inteiro":"▶ Ouvir conversa inteira"}</button>${nx?`<button class="btn" id="nextL">${x.lv==="h"&&nx.book===x.book?"Próximo capítulo →":"Próxima lição →"}</button>`:""}${canR?'<button class="btn ghost" id="toR">Modo Responder</button>':""}<button class="btn ghost" id="again">Refazer</button><button class="btn ghost" id="home2">Voltar à lista</button></div>
@@ -497,8 +699,14 @@ function lesson(id,mode){
     lis.hidden=!x.s[cur];
     const a=document.getElementById("again");if(a){a.onclick=()=>lesson(id,"p");document.getElementById("home2").onclick=goHome}
   }
-  function next(){cur++;typ.value="";if(cur>=x.s.length){if(!done[id]){gained=10;pts+=10}done[id]=true;pos[id]=0;typ.disabled=true}else pos[id]=cur;persist();render();if(cur<x.s.length)typ.focus()}
-  typ.oninput=()=>{if(cur<x.s.length&&norm(typ.value).trim().toLowerCase()===norm(x.s[cur][0]).toLowerCase())next();else render()};
+  function next(){if(x.kg)speak(x.s[cur][0],null,null,whoOf(x,cur),true);cur++;spokenW=new Set();wasBad=false;typ.value="";if(cur>=x.s.length){if(!done[id]){gained=10;pts+=10}stars=errs<=2?3:errs<=6?2:1;if(x.lv==="k")done[id+"S"]=Math.max(done[id+"S"]||0,stars);done[id]=true;pos[id]=0;typ.disabled=true}else pos[id]=cur;persist();render();if(cur<x.s.length)typ.focus()}
+  typ.oninput=()=>{
+    if(cur>=x.s.length)return render();
+    const t=norm(typ.value),tg=norm(x.s[cur][0]),tl=t.toLowerCase(),gl=tg.toLowerCase();
+    const bad=!gl.startsWith(tl);if(bad&&!wasBad)errs++;wasBad=bad;
+    if(x.kg&&!bad){const re=/[A-Za-z]+(?:'[A-Za-z]+)?/g;let m,k=0;while((m=re.exec(tg))){const end=m.index+m[0].length;if(t.length>=end&&!spokenW.has(k)){spokenW.add(k);const g=x.kg[cur][k];speak(m[0],null,.85,null,true);if(g&&g!=="-")speak(g,null,null,"pt",true)}k++}}
+    if(tl.trim()===gl)next();else render();
+  };
   typ.onkeydown=e=>{if(e.key==="Enter")e.preventDefault()};
   render();typ.focus();window.scrollTo(0,0);
 }
@@ -524,12 +732,14 @@ function resumeBtn(){
   const l=load("ee_last",null);if(!l)return "";
   const x=all().find(y=>y.id===l.id);if(!x)return "";
   const p=l.m==="r"?"modo Responder":pos[x.id]?`frase ${pos[x.id]+1} de ${x.s.length}`:"início";
-  return `<button class="resume" id="resume"><span style="font-size:22px">▶</span><span><b>Voltar aonde parou</b><small>Exit ${x.n} · ${esc(x.title)} · ${p}</small></span></button>`;
+  return `<button class="resume" id="resume"><span style="font-size:22px">▶</span><span><b>Voltar aonde parou</b><small>${x.lv==="k"?x.em:"Exit "+x.n} · ${esc(x.title)} · ${p}</small></span></button>`;
 }
 function showInfo(){
   const o=document.createElement("div");o.className="overlay";
   o.innerHTML=`<div class="modal" role="dialog" aria-label="Como usar">
   <h2>Como usar o Next Exit: English</h2>
+  <h3>📲 Instalar no celular</h3>
+  ${installSteps()}
   <h3>1. Escolha uma lição</h3>
   <p>Use os filtros para escolher o nível: Básico, Intermediário, Avançado, Vocabulário ou Textos.</p>
   <h3>2. Praticar</h3>
@@ -551,6 +761,8 @@ function showInfo(){
   <p>Cole qualquer texto em inglês e o app traduz e cria uma lição para você. Precisa de internet.</p>
   <h3>7. Voltar aonde parou</h3>
   <p>O botão no topo abre a última lição em que você estava, na frase em que parou.</p>
+  <h3>🎁 Indique e ganhe</h3>
+  <p>Compartilhe seu link. Cada amigo que assinar dá a você +30 dias grátis.</p>
   <h3>8. Conta e acesso</h3>
   <p>Seu acesso vale ${DIAS} dias a partir da liberação. "Meus textos" permite até ${LIM_TX} traduções por dia. Esqueceu a senha? Fale com o administrador na comunidade.</p>
   <button class="btn" id="closeInfo">Entendi</button></div>`;
@@ -562,7 +774,66 @@ function playAll(x,btn){
   const lbl=btn.dataset.lbl||(btn.dataset.lbl=btn.textContent);
   if(btn.dataset.on){playTok++;stopSpeak();btn.dataset.on="";btn.textContent=lbl;return}
   const tok=++playTok;btn.dataset.on="1";btn.textContent="■ Parar";let k=0;
-  const go=()=>{if(tok!==playTok)return;if(k>=x.s.length){btn.dataset.on="";btn.textContent=lbl;return}speak(x.s[k++][0],go)};go();
+  const go=()=>{if(tok!==playTok)return;if(k>=x.s.length){btn.dataset.on="";btn.textContent=lbl;return}speak(x.s[k][0],go,null,whoOf(x,k++))};go();
+}
+function album(){
+  const k=all().filter(x=>x.lv==="k"),got=k.filter(x=>done[x.id]).length;
+  return `<section class="panel"><h2>⭐ Meu álbum de figurinhas</h2><p class="msg">${got} de ${k.length} figurinhas. Conclua lições para ganhar mais!</p><div class="alb">${k.map(x=>`<div class="stk${done[x.id]?"":" off"}" title="${esc(x.title)}"><span>${done[x.id]?x.em:"❔"}</span><small>${esc(x.title)}</small></div>`).join("")}</div></section>`;
+}
+const INFO={
+ all:"Todas as lições de adulto. Escolha um nível nos filtros ao lado.",
+ b:"Básico: diálogos simples do dia a dia e do trabalho. Ótimo para começar.",
+ i:"Intermediário: situações mais completas, como entrevista, médico, aluguel e oficina.",
+ a:"Avançado: negociação, contratos, impostos e conversas mais longas.",
+ v:"Vocabulário: palavras por tema (corpo, casa, carro, comida…) em frases curtas.",
+ t:"Textos: a história do Yuri nos EUA, do fácil ao avançado. Bom para treinar leitura.",
+ h:"Histórias: livros clássicos em capítulos. Responda à pergunta no fim de cada um para liberar o próximo.",
+ m:"Meus textos: cole pequenas histórias, letras de música, e-mails, mensagens ou o que quiser. O app traduz e cria uma lição para você praticar.",
+ kall:"Todas as lições Kids.",
+ escola:"Frases para usar na escola, com a professora e os amigos.",
+ casa:"Frases para falar com a mamãe e o papai em casa.",
+ uteis:"Palavras úteis com desenho. Ao digitar, o app fala a palavra em inglês e o significado em português.",
+ frases:"Frases que usam as palavras úteis no dia a dia.",
+ palavras:"Vocabulário: animais, cores, números, brinquedos, comidas e corpo.",
+ historias:"Histórias infantis clássicas em inglês simples.",
+ album:"Seu álbum: cada lição concluída dá uma figurinha.",
+ meta:"Meta do dia: estude 5 minutos em qualquer lição. O relógio pausa se você ficar 1 minuto sem mexer. Cada meta cumprida vale um prêmio, e os dias seguidos contam a sua sequência 🔥.",
+ resp:"Responder: o personagem fala e você responde de memória. Libera depois de concluir o Praticar.",
+ spd:"Velocidade da voz: normal, lenta ou bem lenta. O 🐢 ao lado de cada frase sempre fala bem devagar.",
+ ind:"Indique e ganhe: mande seu link. Quando um amigo assinar, você ganha 30 dias grátis."
+};
+function infoBtn(k){return `<span class="ii" role="button" tabindex="0" data-info="${k}" aria-label="O que é isso?">ⓘ</span>`}
+document.addEventListener("click",e=>{
+  const b=e.target.closest(".ii");if(!b)return;e.stopPropagation();e.preventDefault();closeTip();
+  tipEl=document.createElement("div");tipEl.className="tip info";tipEl.textContent=INFO[b.dataset.info]||"";document.body.appendChild(tipEl);
+  const r=b.getBoundingClientRect(),tw=tipEl.offsetWidth;tipEl.style.left=Math.max(8,Math.min(innerWidth-tw-8,r.left+r.width/2-tw/2))+"px";tipEl.style.top=(r.bottom+8+tipEl.offsetHeight>innerHeight?r.top-tipEl.offsetHeight-8:r.bottom+8)+"px";
+},true);
+function statLine(){const k=dkey(),s=today0.d===k?today0.s:0,ok=goal.days[k];
+  return `<button class="statline" id="statL" type="button">${ok?"👍 Meta de hoje":"⏱ "+fmtT(s)+"/5:00"} · ${gemIcon()} ${goal.gems||0} · 🔥 ${streak()} · ★ ${pts}</button>`}
+function sheet(title,html,after){
+  const o=document.createElement("div");o.className="overlay";
+  o.innerHTML=`<div class="modal" role="dialog" aria-label="${esc(title)}"><div class="row" style="justify-content:space-between"><h2>${title}</h2><button class="btn ghost" data-x="1" aria-label="Fechar">✕</button></div>${html}</div>`;
+  document.body.appendChild(o);o.addEventListener("click",e=>{if(e.target===o||e.target.closest("[data-x]"))o.remove()});
+  after&&after(o);return o;
+}
+function openMenu(){
+  const it=[["perfil","👤","Meu perfil"],isAdmin?null:["ind","🎁","Indique e ganhe"],plano!=="kids"?["textos","✍️","Meus textos"]:null,(isStandalone()||load("ee_inst",0))?null:["inst","📲","Instalar o app"],["ajuda","ℹ","Ajuda"],isAdmin?["alunos","👥","Alunos"]:null,["sair","🚪","Sair"]].filter(Boolean);
+  const o=document.createElement("div");o.className="drawer-bg";
+  o.innerHTML=`<nav class="drawer" aria-label="Menu"><div class="row" style="justify-content:space-between"><b>Menu</b><button class="btn ghost" data-x="1" aria-label="Fechar">✕</button></div>${sess&&sess.email?`<p class="hint">${esc(sess.nome||sess.email)}</p>`:""}
+  ${it.map(([k,i,t])=>`<button class="mi" data-mi="${k}"><span>${i}</span>${t}${k==="alunos"?`<span class="nbadge in" id="admBadge2" ${lastN?"":"hidden"}>${lastN}</span>`:""}</button>`).join("")}</nav>`;
+  document.body.appendChild(o);requestAnimationFrame(()=>o.classList.add("on"));
+  const close=()=>{o.classList.remove("on");setTimeout(()=>o.remove(),200)};
+  o.addEventListener("click",e=>{
+    if(e.target===o||e.target.closest("[data-x]"))return close();
+    const m=e.target.closest("[data-mi]");if(!m)return;close();const k=m.dataset.mi;
+    if(k==="perfil")sheet("👤 Meu perfil",profileHtml()+`<p class="msg">★ ${pts} pontos no total</p>`);
+    if(k==="ind")sheet("🎁 Indique e ganhe",indPanel(),()=>{if(ind)bindInd();else loadInd()});
+    if(k==="textos"){filter="m";home();window.scrollTo(0,0)}
+    if(k==="inst")sheet("📲 Instalar o app",installBanner(true));
+    if(k==="ajuda")showInfo();
+    if(k==="alunos")adminScreen();
+    if(k==="sair")logout();
+  });
 }
 function prevCh(x){if(x.lv!=="h")return null;const a=all(),i=a.findIndex(y=>y.id===x.id);const p=a[i-1];return p&&p.book===x.book?p:null}
 function locked(x){const p=prevCh(x);return !!(p&&!done[p.id])}
@@ -579,13 +850,13 @@ function bindQ(x,id,onPts){
     if(done[id+"Q"]==null){done[id+"Q"]=ok;if(ok){pts+=5;onPts&&onPts()}persist()}
   });
 }
-function modeBar(id,m){const ok=!!done[id];return `<div class="modes"><button class="chip" data-m="p" aria-pressed="${m==="p"}">Praticar</button><button class="chip" data-m="r" aria-pressed="${m==="r"}" ${ok?"":"disabled"}>${ok?"Responder":"🔒 Responder"}</button>${ok?"":'<span class="hint">Conclua o Praticar para liberar.</span>'}</div>`}
+function modeBar(id,m){const ok=!!done[id];return `<div class="modes"><button class="chip" data-m="p" aria-pressed="${m==="p"}">Praticar</button><button class="chip" data-m="r" aria-pressed="${m==="r"}" ${ok?"":"disabled"}>${ok?"Responder":"🔒 Responder"}</button>${infoBtn("resp")}${ok?"":'<span class="hint">Conclua o Praticar para liberar.</span>'}</div>`}
 function bindModes(id){app.querySelectorAll("[data-m]").forEach(b=>b.onclick=()=>{if(!b.disabled)lesson(id,b.dataset.m)})}
 const strip=s=>norm(s).toLowerCase().replace(/[^a-z0-9 ]/g,"").replace(/\s+/g," ").trim();
 function respond(x,sp){
   stopSpeak();const id=x.id,t0=Date.now();let cur=0,helped=false,gained=0;
   app.innerHTML=`
-  <div class="lesson-head"><button class="btn ghost" id="back">← Voltar</button><h2>${esc(x.title)}</h2><span class="pill" id="ptsPill">★ ${pts} pts</span></div>
+  <div class="lesson-head"><button class="btn ghost" id="back">← Voltar</button><h2>${esc(x.title)}</h2>${timerHtml()}<span class="pill" id="ptsPill">★ ${pts} pts</span></div>
   <span class="lvl">${LV[x.lv]} · Exit ${x.n} · Responder</span>
   ${modeBar(id,"r")}
   <div class="prog"><i id="pg"></i></div>
@@ -602,15 +873,15 @@ function respond(x,sp){
   document.getElementById("back").onclick=goHome;bindModes(id);
   const box=document.getElementById("sents"),ans=document.getElementById("ans"),help=document.getElementById("help");
   const who=i=>`<span class="who${sp[1][i]==="Y"?" you":""}">${sp[1][i]==="Y"?"Você":esc(sp[0])}</span>`;
-  const lastO=()=>{for(let k=cur-1;k>=0;k--)if(sp[1][k]==="O")return x.s[k][0];return ""};
-  box.onclick=e=>{if(wordTap(e))return;const b=e.target.closest(".say");if(b)speak(x.s[+b.dataset.i][0],null,b.dataset.slow?.5:null)};
-  document.getElementById("rep").onclick=()=>{const t=lastO();if(t)speak(t)};
+  const lastO=()=>{for(let k=cur-1;k>=0;k--)if(sp[1][k]==="O")return k;return -1};
+  box.onclick=e=>{if(wordTap(e))return;const b=e.target.closest(".say");if(b)speak(x.s[+b.dataset.i][0],null,b.dataset.slow?.5:null,whoOf(x,+b.dataset.i))};
+  document.getElementById("rep").onclick=()=>{const k=lastO();if(k>=0)speak(x.s[k][0],null,null,whoOf(x,k))};
   document.getElementById("hint").onclick=()=>{if(cur<x.s.length){helped=true;help.textContent="Dica: "+x.s[cur][0].split(" ").map(w=>w[0]+"_".repeat(Math.max(0,w.replace(/[^A-Za-z']/g,"").length-1))).join(" ")}};
   document.getElementById("show").onclick=()=>{if(cur<x.s.length){helped=true;help.textContent="Resposta: "+x.s[cur][0]}};
   function advance(){
     let spoke=[];
-    while(cur<x.s.length&&sp[1][cur]==="O"){spoke.push(x.s[cur][0]);cur++}
-    if(spoke.length){const go=k=>{if(k<spoke.length)speak(spoke[k],()=>go(k+1))};go(0)}
+    while(cur<x.s.length&&sp[1][cur]==="O"){spoke.push(cur);cur++}
+    if(spoke.length){const go=k=>{if(k<spoke.length)speak(x.s[spoke[k]][0],()=>go(k+1),null,whoOf(x,spoke[k]))};go(0)}
     render();
   }
   function render(){
